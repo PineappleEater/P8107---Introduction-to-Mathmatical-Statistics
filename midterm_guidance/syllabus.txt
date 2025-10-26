@@ -1,0 +1,261 @@
+===============================================================================
+P8107 INTRODUCTION TO MATHEMATICAL STATISTICS
+Fall 2025 | 3 Credits
+===============================================================================
+
+===============================================================================
+COURSE SCHEDULE
+===============================================================================
+
+The schedule laid out here is approximate. Adaptations to this schedule will be 
+made as necessary.
+
+
+WEEK 1 – INTRODUCTION TO PROBABILITY
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply basic principles of probability
+  • Calculate probabilities of events based on counting points
+  • Understand and apply conditional probability and independence of events
+
+Reading:
+  Wackerly et al Sections 2.2-2.7 (36 pp.)
+
+
+WEEK 2 – SOME PROBABILITY LAWS
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply multiplicative and additive laws of probability
+  • Understand and apply the law of total probability
+  • Understand and apply Bayes' rule
+  • Understand random variables
+
+Reading:
+  Wackerly et al Sections 2.8-2.12 (20 pp.)
+
+
+WEEK 3 – DISCRETE RANDOM VARIABLES
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply basic calculations using discrete random variables
+  • Calculate expected values of discrete random variables
+  • Make probability calculations based on random variables having binomial, 
+    geometric, hypergeometric, or Poisson distributions
+
+Reading:
+  Wackerly et al Sections 3.1-3.5, 3.7, 3.8 (41 pp.)
+
+
+WEEK 4 – MOMENTS, MOMENT GENERATING FUNCTIONS, INTRO TO CONTINUOUS RVs
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Derive and apply moment generating functions for a given distribution
+  • Understand and apply basic calculations using continuous random variables
+  • Calculate expected values of continuous random variables
+  • Make probability calculations based on random variables having uniform or 
+    normal distributions
+
+Reading:
+  Wackerly et al Sections 3.9, 4.1-4.5 (26 pp.)
+
+
+WEEK 5 – SOME CONTINUOUS RANDOM VARIABLES AND CHEBYSHEV'S THEOREM
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Make probability calculations based on random variables having gamma or 
+    beta distributions
+  • Derive and apply moment generating functions for continuous distributions
+  • Understand and apply Chebyshev's Theorem
+
+Reading:
+  Wackerly et al Sections 4.6-4.10 (25 pp.)
+
+
+WEEK 6 – JOINT, MARGINAL, AND CONDITIONAL PROBABILITY DISTRIBUTIONS
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Calculate probabilities of events using joint distributions
+  • Derive marginal and conditional distributions
+
+Reading:
+  Wackerly et al Sections 5.1-5.4 (32 pp.)
+
+
+WEEK 7 – MEANS, VARIANCES, COVARIANCES FOR BIVARIATE DISTRIBUTIONS
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Calculate expected value of functions of random variables
+  • Calculate expectations of sums and products of random variables
+  • Calculate means, variances, and covariances using joint distributions
+  • Calculate conditional expectations
+
+Reading:
+  Wackerly et al Sections 5.5-5.9, 5.11 (29 pp.)
+
+
+WEEK 8 – MIDTERM EXAM
+-------------------------------------------------------------------------------
+In-class written exam
+
+
+WEEK 9 – FUNCTIONS OF RANDOM VARIABLES
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Calculate distributions of functions of random variables
+
+Reading:
+  Wackerly et al Sections 6.1-6.5, 6.7 (37 pp.)
+
+
+WEEK 10 – SAMPLING DISTRIBUTIONS AND THE CENTRAL LIMIT THEOREM
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Identify sampling distributions
+  • Understand and apply the central limit theorem
+  • Calculate approximate probabilities using the normal approximation to the 
+    binomial distribution
+
+
+WEEK 11 – ESTIMATION
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Compare estimators based on bias, variance, and mean squared error
+  • Calculate and interpret confidence intervals
+  • Make sample size calculations
+
+Reading:
+  Wackerly et al Sections 8.1-8.9 (47 pp.)
+
+
+WEEK 12 – PROPERTIES OF POINT ESTIMATION, METHODS OF ESTIMATION
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply principles of relative efficiency, consistency, and 
+    sufficiency
+  • Derive estimators based on the method of moments and the maximum 
+    likelihood principle
+
+Reading:
+  Wackerly et al Sections 9.1-9.8 (41 pp.)
+
+
+WEEK 13 – HYPOTHESIS TESTING
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply fundamental principles of statistical tests of 
+    hypotheses
+  • Calculate power of hypothesis tests and make sample size calculations
+  • Understand and apply the connection between hypothesis testing and 
+    interval estimation
+  • Calculate and properly interpret p-values
+
+Reading:
+  Wackerly et al Sections 10.1-10.7 (32 pp.)
+
+
+WEEK 14 – TESTING FOR MEANS AND VARIANCES, LIKELIHOOD RATIO TESTS
+-------------------------------------------------------------------------------
+Learning Objectives:
+  • Understand and apply the Neyman-Pearson lemma
+  • Carry out hypothesis testing for means and variances
+  • Construct likelihood ratio tests
+
+Reading:
+  Wackerly et al Sections 10.8-10.11 (29 pp.)
+
+
+===============================================================================
+ASSESSMENT RUBRICS
+===============================================================================
+
+-------------------------------------------------------------------------------
+
+CRITERIA: KNOWLEDGE OF MATERIAL
+
+Poor (1):
+  Had no apparent knowledge of the material. Was not able to contribute 
+  meaningfully to completion of the assignment.
+
+Below Average (2):
+  Minimally understood the topic, missing several relevant facts/concepts. 
+  Minimally contributed to the completion of the assignment.
+
+Average (3):
+  Understood some of the fundamentals of the topic. Was able to knowledgably 
+  comment on facts relevant to the completion of the assignment.
+
+Above Average (4):
+  Understood the fundamentals of the topic. Was able to substantially 
+  contribute to the completion of the assignment.
+
+Excellent (5):
+  Completely understood the fundamentals of the topic. Was able to contribute 
+  numerous relevant facts that shaped the direction of the completion of the 
+  assignment.
+
+
+CRITERIA: LEADERSHIP/COOPERATION
+
+Poor (1):
+  Uncooperative and would not participate. Overall was a hinderance to the 
+  team.
+
+Below Average (2):
+  Generally cooperative but helped little in moving the team forward.
+
+Average (3):
+  Consistently listened to others and worked cooperatively to complete the 
+  assignment.
+
+Above Average (4):
+  Showed initiative in helping the team. Was a key part of completing the 
+  assignment.
+
+Excellent (5):
+  Positive force in completing the assignment. Sought input and actively 
+  listened to others. Helped motivate team members.
+
+
+CRITERIA: OVERALL ASSESSMENT
+
+Poor (1):
+  If given a choice, I would refuse to work with this person on a team again.
+
+Below Average (2):
+  If given a choice, I would be reluctant to work with this person on a team 
+  again.
+
+Average (3):
+  If given a choice, I would be indifferent about working with this person on 
+  a team again.
+
+Above Average (4):
+  If given a choice, I would be pleased to work with this person on a team 
+  again.
+
+Excellent (5):
+  If given a choice, I would actively seek to work with this person on a team 
+  again.
+
+
+VALIDITY RUBRIC
+-------------------------------------------------------------------------------
+
+CRITERIA: QUALITY OF ASSESSMENT
+
+Poor (0):
+  Response to peer assessments do not show validity; have gross 
+  inconsistencies relative to other assessments.
+
+Sufficient (1/2):
+  Response to peer assessments demonstrate limited validity; some 
+  inconsistencies without clear justification.
+
+Exemplary (1):
+  Response to peer assessments demonstrate complete validity; any 
+  inconsistencies are fully justified.
+
+
+===============================================================================
+END OF SYLLABUS
+===============================================================================

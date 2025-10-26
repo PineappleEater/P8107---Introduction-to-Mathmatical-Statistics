@@ -1,0 +1,811 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[top=0.9cm,left=0.9cm,right=0.9cm,bottom=1.4cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{color,graphicx,overpic}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{newtxtext,newtxmath}
+
+% 紧凑排版
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+\raggedright
+\footnotesize
+\pagenumbering{arabic}
+\begin{multicols}{3}
+
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+% \fbox{\parbox{0.9\linewidth}{\centering
+\LARGE{\textbf{Mathematical Statistics Midterm Cheat Sheet}} \\[0.5em]
+\small{Xuange Liang\\xl3493@cumc.columbia.edu}
+% }}
+\end{center}
+
+\vspace{2mm}
+\fbox{\large\textbf{1. Probability Foundations}}
+\vspace{0.5mm}
+
+\textbf{Sample Space and Events:}
+\begin{itemize}
+\item Sample Space $S$: Set of all possible outcomes
+\item Event: Subset of $S$
+\item Simple Event: Single outcome; Compound Event: Multiple outcomes
+\item Discrete $S$: Finite/countably infinite; Continuous $S$: Uncountable
+\end{itemize}
+
+\textbf{Probability Axioms:}
+\begin{itemize}
+\item Axiom 1: $P(A) \geq 0$ for any event $A$
+\item Axiom 2: $P(S) = 1$
+\item Axiom 3: For disjoint $A_1, A_2, \ldots$: $P(\bigcup A_i) = \sum P(A_i)$
+\end{itemize}
+
+\textbf{Basic Rules:}
+\begin{itemize}
+\item Complement: $P(A^c) = 1 - P(A)$
+\item Addition: $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+\item Mutually Exclusive: $P(A \cup B) = P(A) + P(B)$
+\end{itemize}
+
+\textbf{Sample-Point Method:} $P(A) = \frac{\text{Number of outcomes in } A}{\text{Total outcomes in } S}$
+
+\textbf{Counting Techniques:}
+\begin{itemize}
+\item Multiplication Principle: $n_1 \times n_2$ ways
+\item Permutations: $P_n = n!$, $P_{n,r} = \frac{n!}{(n-r)!}$
+\item Combinations: $\binom{n}{r} = \frac{n!}{r!(n-r)!}$
+\end{itemize}
+
+\textbf{Conditional Probability:}
+\begin{itemize}
+\item $P(A|B) = \frac{P(A \cap B)}{P(B)}$ if $P(B) > 0$
+\item Multiplication Rule: $P(A \cap B) = P(A|B)P(B)$
+\item Chain Rule: $P(A_1 \cap \cdots \cap A_n) = P(A_1)P(A_2|A_1)\cdots$
+\end{itemize}
+
+\textbf{Independence:}
+\begin{itemize}
+\item $P(A \cap B) = P(A)P(B)$
+\item Equivalent: $P(A|B) = P(A)$, $P(B|A) = P(B)$
+\item Multiple: $P(A_1 \cap \cdots \cap A_k) = \prod P(A_i)$
+\end{itemize}
+
+\textbf{Law of Total Probability:} If $B_1, \ldots, B_n$ partition $S$:
+$$P(A) = \sum_{i=1}^n P(A|B_i)P(B_i)$$
+
+\textbf{Bayes' Theorem:}
+$$P(B_i|A) = \frac{P(A|B_i)P(B_i)}{\sum_j P(A|B_j)P(B_j)}$$
+
+\textbf{Random Variables:}
+\begin{itemize}
+\item Function $X: S \to \mathbb{R}$
+\item Discrete: Takes countable values
+\item Continuous: Takes uncountable values
+\end{itemize}
+
+\textbf{Cumulative Distribution Function (CDF):}
+$$F_X(x) = P(X \leq x)$$
+Properties: Non-decreasing, right-continuous, $F(-\infty)=0$, $F(\infty)=1$
+
+\textbf{Random Sampling:}
+\begin{itemize}
+\item i.i.d.: Independent and identically distributed
+\item With replacement: Independent observations
+\item Without replacement: Dependent (unless $n \ll N$)
+\end{itemize}
+
+\textbf{Expectation:}
+\begin{itemize}
+\item Discrete: $\E[X] = \sum_x x \cdot p(x)$
+\item Continuous: $\E[X] = \int_{-\infty}^{\infty} x \cdot f(x) \, dx$
+\end{itemize}
+
+\textbf{Properties of Expectation:}
+\begin{itemize}
+\item Linearity: $\E[aX + bY] = a\E[X] + b\E[Y]$
+\item $\E[g(X)] = \sum g(x)p(x)$ (discrete) or $\int g(x)f(x)dx$ (continuous)
+\item $\E[c] = c$ (constant)
+\item If $X, Y$ independent: $\E[XY] = \E[X]\E[Y]$. In general: $\E[XY] = \E[X]\E[Y] + \Cov(X,Y)$
+\end{itemize}
+
+\textbf{Variance:}
+\begin{itemize}
+\item Definition: $\Var(X) = \E[(X - \E[X])^2] = \E[X^2] - (\E[X])^2$
+\item $\Var(aX + b) = a^2\Var(X)$
+\item $\Var(X + Y) = \Var(X) + \Var(Y) + 2\Cov(X,Y)$
+\item If independent: $\Var(X + Y) = \Var(X) + \Var(Y)$
+\end{itemize}
+
+\textbf{Covariance:}
+\begin{itemize}
+\item $\Cov(X,Y) = \E[(X-\E[X])(Y-\E[Y])] = \E[XY] - \E[X]\E[Y]$
+\item $\Cov(X,X) = \Var(X)$
+\item $\Cov(aX, bY) = ab\Cov(X,Y)$
+\item Correlation: $\rho = \frac{\Cov(X,Y)}{\sqrt{\Var(X)\Var(Y)}}$, $-1 \leq \rho \leq 1$
+\end{itemize}
+
+\textbf{Conditional Expectation:}
+$\E[Y|X=x] = \sum_y y \cdot p(y|x)$ or $\int y \cdot f(y|x) dy$
+
+\textbf{Law of Total Expectation:} $\E[Y] = \E[\E[Y|X]]$
+
+\vspace{2mm}
+\fbox{\large\textbf{2. MGF}}
+\vspace{0.5mm}
+
+\textbf{Definition:} $M_X(t) = \E[e^{tX}]$
+\begin{itemize}
+\item Discrete: $M_X(t) = \sum_x e^{tx} p(x)$
+\item Continuous: $M_X(t) = \int_{-\infty}^{\infty} e^{tx} f(x) \, dx$
+\end{itemize}
+
+\textbf{Properties of MGF:}
+\begin{itemize}
+\item Uniqueness: MGF uniquely determines distribution
+\item Finding moments: $\E[X^n] = M_X^{(n)}(0)$ (nth derivative at 0)
+\item $\E[X] = M_X'(0)$, $\E[X^2] = M_X''(0)$
+\item $\Var(X) = M_X''(0) - [M_X'(0)]^2$
+\item Linear transformation: $M_{aX+b}(t) = e^{bt}M_X(at)$
+\item Independent sum: If $X, Y$ independent, $M_{X+Y}(t) = M_X(t) \cdot M_Y(t)$
+\end{itemize}
+
+\vspace{2mm}
+\fbox{\large\textbf{3. Common Distributions \& MGF}}
+\vspace{0.5mm}
+
+\textbf{3.1 Discrete}
+
+\textbf{Bernoulli Distribution:} $X \sim \text{Bern}(p)$
+\begin{itemize}
+\item PMF: $P(X=1)=p$, $P(X=0)=1-p$
+\item $\E[X] = p$, $\Var(X) = p(1-p)$
+\item MGF: $M_X(t) = (1-p) + pe^t$
+\item Derivation: $M_X(t) = \E[e^{tX}] = e^{t \cdot 0}(1-p) + e^{t \cdot 1}p = 1-p+pe^t$
+\item $\E[X] = M_X'(0) = pe^t|_{t=0} = p$
+\item $\E[X^2] = M_X''(0) = pe^t|_{t=0} = p$
+\item $\Var(X) = p - p^2 = p(1-p)$
+\end{itemize}
+
+\textbf{Binomial Distribution:} $X \sim B(n, p)$
+\begin{itemize}
+\item PMF: $P(X=k) = \binom{n}{k}p^k(1-p)^{n-k}$
+\item $\E[X] = np$, $\Var(X) = np(1-p)$
+\item MGF: $M_X(t) = (1-p+pe^t)^n = [pe^t + (1-p)]^n$
+\item Derivation: $X = \sum_{i=1}^n X_i$, $X_i \sim \text{Bern}(p)$ independent
+\item $M_X(t) = [M_{X_1}(t)]^n = (1-p+pe^t)^n$
+\item $\E[X] = M_X'(0) = n(pe^t+1-p)^{n-1}pe^t|_{t=0} = np$
+\item $\E[X^2] = M_X''(0)$, calculating gives $\Var(X) = np(1-p)$
+\end{itemize}
+
+\textbf{Poisson Distribution:} $X \sim \text{Pois}(\lambda)$
+\begin{itemize}
+\item PMF: $P(X=k) = \frac{e^{-\lambda}\lambda^k}{k!}$, $k=0,1,2,\ldots$
+\item $\E[X] = \lambda$, $\Var(X) = \lambda$
+\item MGF: $M_X(t) = e^{\lambda(e^t - 1)}$
+\item Derivation: $M_X(t) = \sum_{k=0}^{\infty} e^{tk} \frac{e^{-\lambda}\lambda^k}{k!} = e^{-\lambda}\sum_{k=0}^{\infty} \frac{(\lambda e^t)^k}{k!} = e^{-\lambda}e^{\lambda e^t} = e^{\lambda(e^t-1)}$
+\item $\E[X] = M_X'(0) = \lambda e^t \cdot e^{\lambda(e^t-1)}|_{t=0} = \lambda$
+\item $\E[X^2] = M_X''(0) = [\lambda e^t + \lambda^2 e^{2t}]e^{\lambda(e^t-1)}|_{t=0} = \lambda + \lambda^2$
+\item $\Var(X) = \lambda + \lambda^2 - \lambda^2 = \lambda$
+\end{itemize}
+
+\textbf{3.2 Continuous Distributions}
+
+\textbf{Uniform Distribution:} $X \sim U(a, b)$
+\begin{itemize}
+\item PDF: $f(x) = \frac{1}{b-a}$, $a \leq x \leq b$
+\item $\E[X] = \frac{a+b}{2}$, $\Var(X) = \frac{(b-a)^2}{12}$
+\item MGF: $M_X(t) = \frac{e^{tb} - e^{ta}}{t(b-a)}$, $t \neq 0$
+\item Derivation: $M_X(t) = \int_a^b e^{tx}\frac{1}{b-a}dx = \frac{1}{b-a}\frac{e^{tb}-e^{ta}}{t}$
+\item $\E[X] = \lim_{t\to 0}M_X'(t) = \frac{a+b}{2}$ (using L'Hôpital's rule)
+\end{itemize}
+
+\textbf{Exponential Distribution:} $X \sim \text{Exp}(\lambda)$
+\begin{itemize}
+\item PDF: $f(x) = \lambda e^{-\lambda x}$, $x \geq 0$
+\item $\E[X] = \frac{1}{\lambda}$, $\Var(X) = \frac{1}{\lambda^2}$
+\item MGF: $M_X(t) = \frac{\lambda}{\lambda - t}$, $t < \lambda$
+\item Derivation: $M_X(t) = \int_0^{\infty} e^{tx}\lambda e^{-\lambda x}dx = \lambda\int_0^{\infty}e^{-(\lambda-t)x}dx = \frac{\lambda}{\lambda-t}$
+\item $\E[X] = M_X'(0) = \frac{\lambda}{(\lambda-t)^2}|_{t=0} = \frac{1}{\lambda}$
+\item $\E[X^2] = M_X''(0) = \frac{2\lambda}{(\lambda-t)^3}|_{t=0} = \frac{2}{\lambda^2}$
+\item $\Var(X) = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}$
+\item Memoryless property: $P(X>s+t|X>s) = P(X>t)$
+\end{itemize}
+
+\textbf{Normal Distribution:} $X \sim N(\mu, \sigma^2)$
+\begin{itemize}
+\item PDF: $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
+\item $\E[X] = \mu$, $\Var(X) = \sigma^2$
+\item MGF: $M_X(t) = e^{\mu t + \frac{\sigma^2 t^2}{2}}$
+\item Derivation: Let $Z = \frac{X-\mu}{\sigma} \sim N(0,1)$
+\item $M_Z(t) = \int_{-\infty}^{\infty}e^{tz}\frac{1}{\sqrt{2\pi}}e^{-z^2/2}dz = e^{t^2/2}$ (completing square)
+\item $M_X(t) = \E[e^{t(\sigma Z + \mu)}] = e^{\mu t}M_Z(\sigma t) = e^{\mu t + \sigma^2t^2/2}$
+\item $\E[X] = M_X'(0) = (\mu + \sigma^2 t)e^{\mu t + \sigma^2t^2/2}|_{t=0} = \mu$
+\item $\E[X^2] = M_X''(0) = \mu^2 + \sigma^2$
+\item Linear combination: $aX + b \sim N(a\mu + b, a^2\sigma^2)$
+\end{itemize}
+
+\textbf{Gamma Distribution:} $X \sim \text{Gamma}(\alpha, \beta)$
+\begin{itemize}
+\item PDF: $f(x) = \frac{1}{\beta^\alpha \Gamma(\alpha)}x^{\alpha-1}e^{-x/\beta}$, $x > 0$
+\item Here $\alpha$ is shape parameter, $\beta$ is scale parameter
+\item $\Gamma(\alpha) = \int_0^{\infty}t^{\alpha-1}e^{-t}dt$, $\Gamma(n) = (n-1)!$
+\item $\E[X] = \alpha\beta$, $\Var(X) = \alpha\beta^2$
+\item MGF: $M_X(t) = (1 - \beta t)^{-\alpha}$, $t < 1/\beta$
+\item Derivation: $M_X(t) = \int_0^{\infty}e^{tx}\frac{1}{\beta^\alpha \Gamma(\alpha)}x^{\alpha-1}e^{-x/\beta}dx = \frac{1}{\beta^\alpha \Gamma(\alpha)}\int_0^{\infty}x^{\alpha-1}e^{-x(1/\beta - t)}dx$
+\item Let $u = x(1/\beta - t)$: $= \frac{1}{\beta^\alpha \Gamma(\alpha)} \cdot \frac{\Gamma(\alpha)}{(1/\beta - t)^\alpha} = \frac{1}{\beta^\alpha (1/\beta - t)^\alpha} = \left(\frac{1}{\beta(1/\beta - t)}\right)^\alpha = (1 - \beta t)^{-\alpha}$
+\item $\E[X] = M_X'(0) = -\alpha(1 - \beta t)^{-\alpha-1}(-\beta)|_{t=0} = \alpha\beta(1)^{-\alpha-1} = \alpha\beta$
+\item $\Var(X) = \alpha\beta^2$
+\end{itemize}
+
+\textbf{Chi-squared Distribution:} $X \sim \chi^2(n)$ (special Gamma)
+\begin{itemize}
+\item Definition: $\chi^2(n) = \text{Gamma}(n/2, 2)$
+\item If $Z_i \sim N(0,1)$ independent, then $\sum_{i=1}^n Z_i^2 \sim \chi^2(n)$
+\item PDF: $f(x) = \frac{1}{2^{n/2}\Gamma(n/2)}x^{n/2-1}e^{-x/2}$, $x > 0$
+\item $\E[X] = n$, $\Var(X) = 2n$
+\item MGF: $M_X(t) = (1 - 2t)^{-n/2}$, $t < 1/2$
+\item Derivation: From Gamma MGF, $\alpha = n/2$, $\beta = 2$
+\item $M_X(t) = (1 - 2t)^{-n/2}$
+\item Additivity: $\chi^2(n_1) + \chi^2(n_2) = \chi^2(n_1+n_2)$ (independent)
+\end{itemize}
+
+\vspace{2mm}
+\fbox{\large\textbf{4. Multivariate RVs}}
+\vspace{0.5mm}
+
+\textbf{Joint Distribution:}
+\begin{itemize}
+\item Discrete: $p(x,y) = P(X=x, Y=y)$, $\sum_x\sum_y p(x,y) = 1$
+\item Continuous: $\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dxdy = 1$
+\end{itemize}
+
+\textbf{Marginal Distribution:}
+\begin{itemize}
+\item Discrete: $p_X(x) = \sum_y p(x,y)$
+\item Continuous: $f_X(x) = \int_{-\infty}^{\infty}f(x,y)dy$
+\end{itemize}
+
+\textbf{Conditional Distribution:}
+\begin{itemize}
+\item Discrete: $p(y|x) = \frac{p(x,y)}{p_X(x)}$
+\item Continuous: $f(y|x) = \frac{f(x,y)}{f_X(x)}$
+\end{itemize}
+
+\textbf{Independence:}
+\begin{itemize}
+\item $X, Y$ independent $\Leftrightarrow f(x,y) = f_X(x)f_Y(y)$
+\item $\Leftrightarrow M_{X,Y}(s,t) = M_X(s)M_Y(t)$
+\item If independent: $\E[g(X)h(Y)] = \E[g(X)]\E[h(Y)]$
+\item $\Cov(X,Y) = 0$, but converse not necessarily true
+\end{itemize}
+
+\textbf{Covariance Matrix:}
+For random vector $\mathbf{X} = (X_1, X_2, \ldots, X_n)^T$:
+$$\Sigma = \begin{pmatrix}
+\Var(X_1) & \Cov(X_1,X_2) & \cdots & \Cov(X_1,X_n) \\
+\Cov(X_2,X_1) & \Var(X_2) & \cdots & \Cov(X_2,X_n) \\
+\vdots & \vdots & \ddots & \vdots \\
+\Cov(X_n,X_1) & \Cov(X_n,X_2) & \cdots & \Var(X_n)
+\end{pmatrix}$$
+
+Property: $\Sigma$ is symmetric and positive semidefinite
+
+\textbf{Markov's Inequality:}
+If $X \geq 0$ and $\E[X]$ exists:
+$$P(X \geq a) \leq \frac{\E[X]}{a}, \quad a > 0$$
+
+Derivation: $\E[X] = \int_0^{\infty}xf(x)dx \geq \int_a^{\infty}xf(x)dx \geq a\int_a^{\infty}f(x)dx = aP(X \geq a)$
+
+\textbf{Chebyshev's Inequality:}
+For any random variable $X$ with $\E[X] = \mu$, $\Var(X) = \sigma^2$:
+$$P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$$
+Or: $P(|X - \mu| \geq \epsilon) \leq \frac{\sigma^2}{\epsilon^2}$
+
+Derivation: Let $Y = (X-\mu)^2 \geq 0$, by Markov's inequality:
+$P((X-\mu)^2 \geq k^2\sigma^2) \leq \frac{\E[(X-\mu)^2]}{k^2\sigma^2} = \frac{\sigma^2}{k^2\sigma^2} = \frac{1}{k^2}$
+
+Application: Shows most data is near the mean
+
+\vspace{2mm}
+\fbox{\large\textbf{5. Transformations}}
+\vspace{0.5mm}
+
+\textbf{Method 1: CDF Method}
+\begin{enumerate}
+\item Find CDF of $Y = g(X)$: $F_Y(y) = P(Y \leq y) = P(g(X) \leq y)$
+\item Differentiate to get PDF: $f_Y(y) = F_Y'(y)$
+\end{enumerate}
+
+\textbf{Method 2: Transformation Formula (Monotonic)}
+If $Y = g(X)$ is monotonic, $g$ differentiable:
+$$f_Y(y) = f_X(g^{-1}(y))\left|\frac{dx}{dy}\right| = f_X(x)\left|\frac{dx}{dy}\right|_{x=g^{-1}(y)}$$
+
+General form (Jacobian): If $Y_1 = g_1(X_1,X_2)$, $Y_2 = g_2(X_1,X_2)$:
+$$f_{Y_1,Y_2}(y_1,y_2) = f_{X_1,X_2}(x_1,x_2)|J|$$
+where $J = \begin{vmatrix}\frac{\partial x_1}{\partial y_1} & \frac{\partial x_1}{\partial y_2} \\ \frac{\partial x_2}{\partial y_1} & \frac{\partial x_2}{\partial y_2}\end{vmatrix}$
+
+\textbf{Method 3: MGF Method}
+If $M_Y(t) = M_Z(t)$, then $Y \overset{d}{=} Z$ (same distribution)
+
+\textbf{Method 4: Convolution (Independent Sum)}
+If $X, Y$ independent, $Z = X + Y$:
+$$f_Z(z) = \int_{-\infty}^{\infty}f_X(x)f_Y(z-x)dx = (f_X * f_Y)(z)$$
+
+Discrete: $p_Z(z) = \sum_x p_X(x)p_Y(z-x)$
+
+\vspace{2mm}
+\fbox{\large\textbf{6. Limit Theorems \& Sampling}}
+\vspace{0.5mm}
+
+\textbf{Law of Large Numbers (LLN):}
+\begin{itemize}
+\item Weak LLN: If $X_1, X_2, \ldots$ i.i.d., $\E[X_i] = \mu$, $\Var(X_i) = \sigma^2 < \infty$:
+$$\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i \xrightarrow{P} \mu$$
+i.e.: $\forall \epsilon > 0$, $\lim_{n\to\infty}P(|\bar{X}_n - \mu| > \epsilon) = 0$
+\item Proof using Chebyshev: $P(|\bar{X}_n - \mu| \geq \epsilon) \leq \frac{\Var(\bar{X}_n)}{\epsilon^2} = \frac{\sigma^2/n}{\epsilon^2} \to 0$
+\end{itemize}
+
+\textbf{Central Limit Theorem (CLT):}
+If $X_1, X_2, \ldots$ i.i.d., $\E[X_i] = \mu$, $\Var(X_i) = \sigma^2 < \infty$:
+$$\frac{\bar{X}_n - \mu}{\sigma/\sqrt{n}} = \frac{\sum_{i=1}^n X_i - n\mu}{\sqrt{n}\sigma} \xrightarrow{d} N(0,1)$$
+
+Application: When $n$ large, $\bar{X}_n \approx N(\mu, \sigma^2/n)$ or $\sum X_i \approx N(n\mu, n\sigma^2)$
+
+\textbf{Normal Distribution Properties:}
+\begin{itemize}
+\item If $X \sim N(\mu, \sigma^2)$, then $Z = \frac{X-\mu}{\sigma} \sim N(0,1)$
+\item If $X_i \sim N(\mu_i, \sigma_i^2)$ independent, then $\sum a_i X_i \sim N(\sum a_i\mu_i, \sum a_i^2\sigma_i^2)$
+\item If $X_1, \ldots, X_n$ i.i.d. $N(\mu, \sigma^2)$:
+  \begin{itemize}
+  \item $\bar{X} \sim N(\mu, \sigma^2/n)$
+  \item $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$, where $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$ ($S^2$ is the sample \textbf{variance}, $S$ is the sample \textbf{standard deviation})
+  \item $\bar{X}$ and $S^2$ are independent
+  \end{itemize}
+\end{itemize}
+
+\textbf{t-Distribution:} $T \sim t(n)$
+\begin{itemize}
+\item Definition: If $Z \sim N(0,1)$, $V \sim \chi^2(n)$ independent, then:
+$$T = \frac{Z}{\sqrt{V/n}} \sim t(n)$$
+\item PDF: $f(t) = \frac{\Gamma(\frac{n+1}{2})}{\sqrt{n\pi}\Gamma(\frac{n}{2})}\left(1+\frac{t^2}{n}\right)^{-\frac{n+1}{2}}$
+\item $\E[T] = 0$ ($n > 1$), $\Var(T) = \frac{n}{n-2}$ ($n > 2$)
+\item As $n \to \infty$, $t(n) \to N(0,1)$
+\item Application: If $X_1, \ldots, X_n$ i.i.d. $N(\mu, \sigma^2)$:
+$$\frac{\bar{X} - \mu}{S/\sqrt{n}} \sim t(n-1)$$
+Derivation: $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}} \sim N(0,1)$, $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$, independent
+$$\frac{\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}}{\sqrt{\frac{(n-1)S^2}{\sigma^2}/(n-1)}} = \frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$$
+\end{itemize}
+
+\textbf{F-Distribution:} $F \sim F(n_1, n_2)$
+\begin{itemize}
+\item Definition: If $V_1 \sim \chi^2(n_1)$, $V_2 \sim \chi^2(n_2)$ independent:
+$$F = \frac{V_1/n_1}{V_2/n_2} \sim F(n_1, n_2)$$
+\item $\E[F] = \frac{n_2}{n_2-2}$ ($n_2 > 2$)
+\item If $F \sim F(n_1, n_2)$, then $\frac{1}{F} \sim F(n_2, n_1)$
+\item If $T \sim t(n)$, then $T^2 \sim F(1, n)$
+\item Application: Comparing variances of two normal populations
+\end{itemize}
+
+\textbf{Chi-squared Derivation:}
+If $Z \sim N(0,1)$, find distribution of $Y = Z^2$:
+\begin{itemize}
+\item $F_Y(y) = P(Z^2 \leq y) = P(-\sqrt{y} \leq Z \leq \sqrt{y}) = 2\Phi(\sqrt{y}) - 1$
+\item $f_Y(y) = 2\phi(\sqrt{y})\frac{1}{2\sqrt{y}} = \frac{1}{\sqrt{2\pi y}}e^{-y/2} = \frac{1}{2^{1/2}\Gamma(1/2)}y^{1/2-1}e^{-y/2}$
+\item Thus $Z^2 \sim \chi^2(1) = \text{Gamma}\big(1/2, 2\big)$
+\item If $Z_1, \ldots, Z_n$ i.i.d. $N(0,1)$, by MGF additivity: $\sum Z_i^2 \sim \chi^2(n)$
+\end{itemize}
+
+\textbf{Important Formulas Summary:}
+\begin{itemize}
+\item $\bar{X} \sim N(\mu, \sigma^2/n)$ (normal population)
+\item $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}} \sim N(0,1)$ ($\sigma$ known)
+\item $\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$ ($\sigma$ unknown)
+\item $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$
+\item $\frac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$ (two populations)
+\end{itemize}
+
+\vspace{2mm}
+\fbox{\large\textbf{7. Order Statistics}}
+\vspace{0.5mm}
+
+\textbf{Definition:} Let $X_1, X_2, \ldots, X_n$ be i.i.d. random variables with CDF $F(x)$. The order statistics are the sorted values:
+$$X_{(1)} \leq X_{(2)} \leq \cdots \leq X_{(n)}$$
+
+\textbf{CDF of Order Statistics:}
+\begin{itemize}
+\item CDF of $k$-th order statistic: $F_{X_{(k)}}(x) = \sum_{j=k}^n \binom{n}{j} [F(x)]^j [1-F(x)]^{n-j}$
+\item PDF of $k$-th order statistic: $f_{X_{(k)}}(x) = \frac{n!}{(k-1)!(n-k)!} [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$
+\end{itemize}
+
+\textbf{Mean and Variance:}
+\begin{itemize}
+\item $\E[X_{(k)}] = \int_{-\infty}^{\infty} x \cdot f_{X_{(k)}}(x) \, dx$
+\item $\Var(X_{(k)}) = \E[X_{(k)}^2] - (\E[X_{(k)}])^2$
+\end{itemize}
+
+\textbf{Special Cases:}
+\begin{itemize}
+\item \textbf{Minimum:} $X_{(1)}$: CDF: $F_{X_{(1)}}(x) = 1 - [1-F(x)]^n$, PDF: $f_{X_{(1)}}(x) = n[1-F(x)]^{n-1} f(x)$
+\item \textbf{Maximum:} $X_{(n)}$: CDF: $F_{X_{(n)}}(x) = [F(x)]^n$, PDF: $f_{X_{(n)}}(x) = n[F(x)]^{n-1} f(x)$
+\item \textbf{Median:} For odd $n=2m+1$, sample median is $X_{(m+1)}$
+  \begin{itemize}
+  \item For even $n=2m$, sample median is usually $(X_{(m)} + X_{(m+1)})/2$
+  \end{itemize}
+\end{itemize}
+
+\textbf{Sample Quantiles:}
+\begin{itemize}
+\item $p$-th sample quantile: $X_{([np]+1)}$ where $[np]$ is the greatest integer less than or equal to $np$
+\item Sample median: 50th percentile
+\item Sample quartiles: 25th, 50th, 75th percentiles
+\end{itemize}
+
+\textbf{Range:} $R = X_{(n)} - X_{(1)}$
+\begin{itemize}
+\item CDF: $F_R(r) = n \int_{-\infty}^{\infty} [F(x+r) - F(x)]^{n-1} f(x) \, dx$
+\item For uniform distribution $U(0,1)$: $X_{(k)} \sim \text{Beta}(k, n-k+1)$
+\end{itemize}
+
+\end{multicols}
+
+\newpage
+
+\begin{center}
+\LARGE{\textbf{Fall 2023 Midterm Solutions}}
+\end{center}
+
+\begin{multicols}{2}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\textbf{Problem 1 (15 pts):} A random variable $Y$ has pdf $f(y) = \frac{1}{10}$ for $10 < y < 20$ (and zero otherwise). Find the moment generating function for $Y$.
+
+\textbf{Solution:}
+\begin{align*}
+M_Y(t) &= \E[e^{tY}] = \int_{10}^{20} e^{ty} \cdot \frac{1}{10} dy \\
+&= \frac{1}{10} \int_{10}^{20} e^{ty} dy \\
+&= \frac{1}{10} \left[ \frac{e^{ty}}{t} \right]_{10}^{20} \\
+&= \frac{1}{10t} (e^{20t} - e^{10t})
+\end{align*}
+
+$\boxed{M_Y(t) = \frac{e^{20t} - e^{10t}}{10t}, \quad t \neq 0}$
+
+\textbf{Problem 2 (15 pts):} A random variable $Y$ has mgf $m(t) = (1-3t)^{-5/2}$ for $t < 1/3$.
+\textbf{(a)} Calculate $E[Y]$. \textbf{(b)} Calculate $Var(Y)$.
+
+\textbf{Solution:}
+Recognize this as Gamma distribution: $Y \sim \text{Gamma}(\alpha, \beta)$ with MGF $(1-\beta t)^{-\alpha}$.
+
+Comparing $(1-3t)^{-5/2}$ with $(1-\beta t)^{-\alpha}$: $\beta = 3$, $\alpha = 5/2$.
+
+\textbf{(a)} $\E[Y] = \alpha\beta = \frac{5}{2} \cdot 3 = \frac{15}{2}$
+
+Alternatively using MGF: $M_Y'(t) = \frac{5}{2}(1-3t)^{-7/2} \cdot 3 = \frac{15}{2}(1-3t)^{-7/2}$
+
+$\E[Y] = M_Y'(0) = \frac{15}{2}$
+
+$\boxed{\E[Y] = \frac{15}{2}}$
+
+\textbf{(b)} $\Var(Y) = \alpha\beta^2 = \frac{5}{2} \cdot 9 = \frac{45}{2}$
+
+Alternatively: $M_Y''(t) = \frac{15}{2} \cdot \frac{7}{2}(1-3t)^{-9/2} \cdot 3 = \frac{315}{4}(1-3t)^{-9/2}$
+
+$\E[Y^2] = M_Y''(0) = \frac{315}{4}$
+
+$\Var(Y) = \E[Y^2] - (\E[Y])^2 = \frac{315}{4} - \frac{225}{4} = \frac{90}{4} = \frac{45}{2}$
+
+$\boxed{\Var(Y) = \frac{45}{2}}$
+
+\textbf{Problem 3 (10 pts):} Seven patients were recruited for a clinical trial, 4 women and 3 men. They are ordered randomly for screening. What is the probability that all four women will be screened before any of the men?
+
+\textbf{Solution:}
+Total number of orderings: $7!$
+
+Favorable orderings: Women in first 4 positions (in any order), men in last 3 positions (in any order).
+
+Number of favorable orderings: $4! \cdot 3! = 24 \cdot 6 = 144$
+
+$P(\text{all women first}) = \frac{4! \cdot 3!}{7!} = \frac{144}{5040} = \frac{1}{35}$
+
+Alternatively: $P = \frac{1}{\binom{7}{4}} = \frac{1}{35}$
+
+$\boxed{P = \frac{1}{35}}$
+
+\textbf{Problem 4 (15 pts):} In a clinical trial, 30\% of participants are randomly assigned to receive a placebo, 20\% are assigned to Treatment A and the remaining 50\% are assigned to Treatment B. Patients receiving placebo get better with probability 3/8 and patients receiving Treatment A get better with probability 5/8. If the probability that ANY patient entering the clinical trial will get better is 23/40, what is the probability that a patient assigned to Treatment B will get better?
+
+\textbf{Solution:}
+Law of Total Probability:
+\begin{align*}
+P(\text{better}) &= P(\text{better}|\text{Placebo})P(\text{Placebo}) \\
+&\quad + P(\text{better}|A)P(A) + P(\text{better}|B)P(B)
+\end{align*}
+
+\begin{align*}
+\frac{23}{40} &= \frac{3}{8} \cdot 0.3 + \frac{5}{8} \cdot 0.2 + p \cdot 0.5 \\
+\frac{23}{40} &= \frac{9}{80} + \frac{10}{80} + \frac{p}{2} \\
+\frac{46}{80} &= \frac{19}{80} + \frac{p}{2} \\
+\frac{27}{80} &= \frac{p}{2}
+\end{align*}
+
+$\boxed{p = \frac{27}{40}}$
+
+\textbf{Problem 5 (25 pts):} Random variables $Y_1$ and $Y_2$ have joint pdf $f(y_1, y_2) = \frac{1}{2}e^{-(y_1+y_2)}$ for $0 < y_1 < y_2 < \infty$.
+\textbf{(a)} Find the marginal distribution of $Y_2$.
+\textbf{(b)} Find the distribution of $Y_2$ conditional on $Y_1 = 1$.
+\textbf{(c)} Are $Y_1$ and $Y_2$ independent? Explain.
+
+\textbf{Solution:}
+
+\textbf{(a)} Marginal distribution of $Y_2$:
+\begin{align*}
+f_{Y_2}(y_2) &= \int_{0}^{y_2} f(y_1, y_2) dy_1 \\
+&= \int_{0}^{y_2} \frac{1}{2}e^{-(y_1+y_2)} dy_1 \\
+&= \frac{1}{2}e^{-y_2} \int_{0}^{y_2} e^{-y_1} dy_1 \\
+&= \frac{1}{2}e^{-y_2} [-e^{-y_1}]_{0}^{y_2} \\
+&= \frac{1}{2}e^{-y_2}(1 - e^{-y_2})
+\end{align*}
+
+$\boxed{f_{Y_2}(y_2) = \frac{1}{2}(e^{-y_2} - e^{-2y_2}), \quad y_2 > 0}$
+
+\textbf{(b)} First find marginal of $Y_1$:
+\begin{align*}
+f_{Y_1}(y_1) &= \int_{y_1}^{\infty} \frac{1}{2}e^{-(y_1+y_2)} dy_2 \\
+&= \frac{1}{2}e^{-y_1} \int_{y_1}^{\infty} e^{-y_2} dy_2 \\
+&= \frac{1}{2}e^{-y_1} \cdot e^{-y_1} = \frac{1}{2}e^{-2y_1}
+\end{align*}
+
+At $y_1 = 1$: $f_{Y_1}(1) = \frac{1}{2}e^{-2}$
+
+Conditional pdf:
+\begin{align*}
+f_{Y_2|Y_1}(y_2|1) &= \frac{f(1, y_2)}{f_{Y_1}(1)} = \frac{\frac{1}{2}e^{-(1+y_2)}}{\frac{1}{2}e^{-2}} = e^{1-y_2}
+\end{align*}
+
+$\boxed{f_{Y_2|Y_1}(y_2|1) = e^{1-y_2}, \quad y_2 > 1}$
+
+\textbf{(c)} $Y_1$ and $Y_2$ are $\boxed{\text{NOT independent}}$
+
+Reason: The support constraint $y_1 < y_2$ shows dependence.
+
+\textbf{Problem 6 (20 pts):} Random variables $Y_1$ and $Y_2$ have joint pdf $f(y_1,y_2) = \frac{1}{12}(y_1 + 2y_2)$ for $0 \leq y_1 \leq 2$ and $0 \leq y_2 \leq 2$.
+\textbf{(a)} Calculate $P(Y_1 > 1)$.
+\textbf{(b)} Calculate $P(Y_2 > 1 | Y_1 > 1)$.
+
+\textbf{Solution:}
+
+\textbf{(a)} $P(Y_1 > 1)$:
+\begin{align*}
+P(Y_1 > 1) &= \int_{1}^{2} \int_{0}^{2} \frac{1}{12}(y_1 + 2y_2) dy_2 dy_1 \\
+&= \int_{1}^{2} \frac{1}{12} [y_1 y_2 + y_2^2]_{0}^{2} dy_1 \\
+&= \int_{1}^{2} \frac{1}{12} (2y_1 + 4) dy_1 \\
+&= \frac{1}{12} [y_1^2 + 4y_1]_{1}^{2} \\
+&= \frac{1}{12}[(4+8) - (1+4)] = \frac{7}{12}
+\end{align*}
+
+$\boxed{P(Y_1 > 1) = \frac{7}{12}}$
+
+\textbf{(b)} $P(Y_2 > 1 | Y_1 > 1)$:
+\begin{align*}
+P(Y_2 > 1, Y_1 > 1) &= \int_{1}^{2} \int_{1}^{2} \frac{1}{12}(y_1 + 2y_2) dy_2 dy_1 \\
+&= \int_{1}^{2} \frac{1}{12} [y_1 y_2 + y_2^2]_{1}^{2} dy_1 \\
+&= \int_{1}^{2} \frac{1}{12} [(2y_1+4) - (y_1+1)] dy_1 \\
+&= \int_{1}^{2} \frac{y_1 + 3}{12} dy_1 \\
+&= \frac{1}{12} [\frac{y_1^2}{2} + 3y_1]_{1}^{2} \\
+&= \frac{1}{12}[(2+6) - (\frac{1}{2}+3)] = \frac{3}{8}
+\end{align*}
+
+$P(Y_2 > 1 | Y_1 > 1) = \frac{P(Y_2>1, Y_1>1)}{P(Y_1>1)} = \frac{3/8}{7/12} = \frac{9}{14}$
+
+$\boxed{P(Y_2 > 1 | Y_1 > 1) = \frac{9}{14}}$
+
+\end{multicols}
+
+\newpage
+
+\begin{center}
+\LARGE{\textbf{Fall 2024 Midterm Solutions}}
+\end{center}
+
+\begin{multicols}{2}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\textbf{Problem 1 (15 pts):} Events $A$ and $B$ are independent. Given that $P(A^c \cap B^c) = 0.6$ and $P(B) = 0.3$, find $P(A)$.
+
+\textbf{Solution:}
+Since $A$ and $B$ are independent, $A^c$ and $B^c$ are also independent.
+
+Therefore:
+\begin{align*}
+P(A^c \cap B^c) &= P(A^c) \cdot P(B^c) \\
+0.6 &= P(A^c) \cdot (1 - P(B)) \\
+0.6 &= P(A^c) \cdot 0.7 \\
+P(A^c) &= \frac{0.6}{0.7} = \frac{6}{7}
+\end{align*}
+
+Therefore:
+$\boxed{P(A) = 1 - P(A^c) = 1 - \frac{6}{7} = \frac{1}{7}}$
+
+
+\textbf{Problem 2 (15 pts):} Let $X \sim N(\mu_1, \sigma_1^2)$ be independent of $Y \sim N(\mu_2, \sigma_2^2)$. Find the distribution of $3Y - 2X$ using moment generating functions.
+
+\textbf{Solution:}
+Let $W = 3Y - 2X$. The MGF of $W$ is:
+\begin{align*}
+M_W(t) &= \E[e^{t(3Y - 2X)}] = \E[e^{3tY - 2tX}] \\
+&= \E[e^{3tY}] \cdot \E[e^{-2tX}] \quad \text{(independence)} \\
+&= M_Y(3t) \cdot M_X(-2t)
+\end{align*}
+
+For $X \sim N(\mu_1, \sigma_1^2)$: $M_X(t) = e^{\mu_1 t + \frac{\sigma_1^2 t^2}{2}}$
+
+For $Y \sim N(\mu_2, \sigma_2^2)$: $M_Y(t) = e^{\mu_2 t + \frac{\sigma_2^2 t^2}{2}}$
+
+\begin{align*}
+M_W(t) &= e^{3\mu_2 t + \frac{9\sigma_2^2 t^2}{2}} \cdot e^{-2\mu_1 t + \frac{4\sigma_1^2 t^2}{2}} \\
+&= e^{(3\mu_2 - 2\mu_1)t + \frac{1}{2}(9\sigma_2^2 + 4\sigma_1^2)t^2}
+\end{align*}
+
+This is the MGF of $N(3\mu_2 - 2\mu_1, 4\sigma_1^2 + 9\sigma_2^2)$.
+
+$\boxed{3Y - 2X \sim N(3\mu_2 - 2\mu_1, 4\sigma_1^2 + 9\sigma_2^2)}$
+
+\textbf{Problem 3 (10 pts):} A population has mean $\mu = 95$ and standard deviation $\sigma = 15$. A random sample of size $n=100$ is taken. Use the Central Limit Theorem to find $P(93 < \bar{X} < 99)$.
+
+\textbf{Solution:}
+By the Central Limit Theorem:
+$$\bar{X} \sim N\left(\mu, \frac{\sigma^2}{n}\right) = N\left(95, \frac{225}{100}\right) = N(95, 2.25)$$
+
+Standard deviation: $\sigma_{\bar{X}} = \frac{15}{\sqrt{100}} = 1.5$
+
+Standardize:
+\begin{align*}
+P(93 < \bar{X} < 99) &= P\left(\frac{93-95}{1.5} < Z < \frac{99-95}{1.5}\right) \\
+&= P\left(-\frac{4}{3} < Z < \frac{8}{3}\right) \\
+&= \Phi\left(\frac{8}{3}\right) - \Phi\left(-\frac{4}{3}\right)
+\end{align*}
+
+$\boxed{P(93 < \bar{X} < 99) = \Phi(8/3) - \Phi(-4/3)}$
+
+\textbf{Problem 4 (20 pts):} Let $X_1, \ldots, X_{10}$ be iid $N(\mu_1, \sigma^2)$ independent of $Y_1, \ldots, Y_{20}$ iid $N(\mu_2, \sigma^2)$. Let $s_1^2$ and $s_2^2$ be the sample variances of the $X_i$'s and $Y_i$'s, respectively.
+\textbf{(a)} Calculate the expectation and variance of $\frac{1}{2}(s_1^2 + s_2^2)$.
+\textbf{(b)} Calculate the expectation and variance of $\frac{1}{28}(9s_1^2 + 19s_2^2)$.
+
+\textbf{Solution:}
+Recall: $\frac{(n-1)s^2}{\sigma^2} \sim \chi^2(n-1)$
+
+For $X$ sample: $\frac{9s_1^2}{\sigma^2} \sim \chi^2(9)$
+
+For $Y$ sample: $\frac{19s_2^2}{\sigma^2} \sim \chi^2(19)$
+
+\textbf{(a)} Expectation:
+\begin{align*}
+\E\left[\frac{1}{2}(s_1^2 + s_2^2)\right] &= \frac{1}{2}(\E[s_1^2] + \E[s_2^2]) \\
+&= \frac{1}{2}(\sigma^2 + \sigma^2) \\
+&= \boxed{\sigma^2}
+\end{align*}
+
+Variance: For $\chi^2(k)$, variance is $2k$.
+
+$\Var\left(\frac{9s_1^2}{\sigma^2}\right) = 2(9) = 18 \Rightarrow \Var(s_1^2) = \frac{18\sigma^4}{81} = \frac{2\sigma^4}{9}$
+
+$\Var\left(\frac{19s_2^2}{\sigma^2}\right) = 2(19) = 38 \Rightarrow \Var(s_2^2) = \frac{38\sigma^4}{361} = \frac{2\sigma^4}{19}$
+
+\begin{align*}
+\Var\left[\frac{1}{2}(s_1^2 + s_2^2)\right] &= \frac{1}{4}[\Var(s_1^2) + \Var(s_2^2)] \\
+&= \frac{1}{4}\left(\frac{2\sigma^4}{9} + \frac{2\sigma^4}{19}\right) \\
+&= \boxed{\frac{\sigma^4}{2}\left(\frac{1}{9} + \frac{1}{19}\right) = \frac{\sigma^4}{2} \cdot \frac{28}{171} = \frac{14\sigma^4}{171}}
+\end{align*}
+
+\textbf{(b)} Expectation:
+\begin{align*}
+\E\left[\frac{1}{28}(9s_1^2 + 19s_2^2)\right] &= \frac{1}{28}(9\sigma^2 + 19\sigma^2) = \sigma^2
+\end{align*}
+
+$\boxed{\E\left[\frac{1}{28}(9s_1^2 + 19s_2^2)\right] = \sigma^2}$
+
+Variance:
+\begin{align*}
+\Var\left[\frac{1}{28}(9s_1^2 + 19s_2^2)\right] &= \frac{1}{784}[81\Var(s_1^2) + 361\Var(s_2^2)] \\
+&= \frac{1}{784}\left(81 \cdot \frac{2\sigma^4}{9} + 361 \cdot \frac{2\sigma^4}{19}\right) \\
+&= \frac{1}{784}(18\sigma^4 + 38\sigma^4) = \frac{56\sigma^4}{784} = \frac{\sigma^4}{14}
+\end{align*}
+
+$\boxed{\Var\left[\frac{1}{28}(9s_1^2 + 19s_2^2)\right] = \frac{\sigma^4}{14}}$
+
+\textbf{Problem 5 (20 pts):} Random variables $X$ and $Y$ have $\E[X] = 120$, $\sigma_X = 10$, $\E[Y] = 180$, $\sigma_Y = 20$, and correlation $\rho = 1/4$. Let $Z = \frac{2}{5}X + \frac{1}{5}Y$.
+\textbf{(a)} Calculate $\E[Z]$.
+\textbf{(b)} Calculate $\Var(Z)$.
+\textbf{(c)} Calculate $\Var(Z)$ if $X$ and $Y$ are independent.
+
+\textbf{Solution:}
+
+\textbf{(a)} Expectation:
+\begin{align*}
+\E[Z] &= \E\left[\frac{2}{5}X + \frac{1}{5}Y\right] \\
+&= \frac{2}{5}\E[X] + \frac{1}{5}\E[Y] \\
+&= \frac{2}{5}(120) + \frac{1}{5}(180) \\
+&= 48 + 36 = 84
+\end{align*}
+
+$\boxed{\E[Z] = 84}$
+
+\textbf{(b)} Variance:
+First find covariance: $\Cov(X,Y) = \rho \sigma_X \sigma_Y = \frac{1}{4}(10)(20) = 50$
+
+\begin{align*}
+\Var(Z) &= \Var\left(\frac{2}{5}X + \frac{1}{5}Y\right) \\
+&= \frac{4}{25}\Var(X) + \frac{1}{25}\Var(Y) + 2 \cdot \frac{2}{5} \cdot \frac{1}{5} \Cov(X,Y) \\
+&= \frac{4}{25}(100) + \frac{1}{25}(400) + \frac{4}{25}(50) \\
+&= \frac{400 + 400 + 200}{25} = \frac{1000}{25} = 40
+\end{align*}
+
+$\boxed{\Var(Z) = 40}$
+
+\textbf{(c)} If independent, $\Cov(X,Y) = 0$:
+\begin{align*}
+\Var(Z) &= \frac{4}{25}(100) + \frac{1}{25}(400) + 0 \\
+&= \frac{800}{25} = 32
+\end{align*}
+
+$\boxed{\Var(Z) = 32}$
+
+\textbf{Problem 6 (20 pts):} Let $Y_1, Y_2, Y_3$ be iid random variables with CDF $F(y) = y^2$ for $0 < y < 1$. Find $\E[Y_{(3)} - Y_3]$, where $Y_{(3)} = \max\{Y_1, Y_2, Y_3\}$.
+
+\textbf{Solution:}
+PDF: $f(y) = F'(y) = 2y$ for $0 < y < 1$
+
+First find $\E[Y_3]$ (any single $Y_i$):
+\begin{align*}
+\E[Y_3] &= \int_0^1 y \cdot 2y \, dy = \int_0^1 2y^2 dy \\
+&= 2 \cdot \frac{y^3}{3}\Big|_0^1 = \frac{2}{3}
+\end{align*}
+
+For maximum $Y_{(3)}$, the PDF is:
+\begin{align*}
+f_{Y_{(3)}}(y) &= n[F(y)]^{n-1}f(y) \\
+&= 3[y^2]^2 \cdot 2y = 3y^4 \cdot 2y = 6y^5
+\end{align*}
+
+Then:
+\begin{align*}
+\E[Y_{(3)}] &= \int_0^1 y \cdot 6y^5 dy = \int_0^1 6y^6 dy \\
+&= 6 \cdot \frac{y^7}{7}\Big|_0^1 = \frac{6}{7}
+\end{align*}
+
+Therefore:
+\begin{align*}
+\E[Y_{(3)} - Y_3] &= \E[Y_{(3)}] - \E[Y_3] \\
+&= \frac{6}{7} - \frac{2}{3} = \frac{18 - 14}{21} = \frac{4}{21}
+\end{align*}
+
+$\boxed{\E[Y_{(3)} - Y_3] = \frac{4}{21}}$
+
+\end{multicols}
+
+\end{document}
