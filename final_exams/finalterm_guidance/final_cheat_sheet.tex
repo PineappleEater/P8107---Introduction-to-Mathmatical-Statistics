@@ -1,0 +1,547 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[top=0.9cm,left=0.9cm,right=0.9cm,bottom=1.4cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{color,graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{newtxtext,newtxmath}
+
+% 紧凑排版
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+\raggedright
+\footnotesize
+\pagenumbering{arabic}
+\begin{multicols}{3}
+
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+\LARGE{\textbf{Mathematical Statistics Final Cheat Sheet}} \\[0.5em]
+\small{Weeks 9-14: Functions of RVs, Sampling, Estimation \& Testing}\\
+\small{Xuange Liang\\xl3493@cumc.columbia.edu}
+\end{center}
+
+\vspace{2mm}
+\fbox{\large\textbf{1. Functions of Random Variables}}
+\vspace{0.5mm}
+
+\textbf{Method 1: CDF Method (Univariate)}
+
+For $Y = g(X)$:
+\begin{enumerate}
+\item Find CDF: $F_Y(y) = P(Y \le y) = P(g(X) \le y)$
+\item Differentiate: $f_Y(y) = F_Y'(y)$
+\end{enumerate}
+
+\textbf{Method 2: Transformation Formula}
+
+If $Y = g(X)$ is monotonic and differentiable:
+$$f_Y(y) = f_X(g^{-1}(y))\left|\frac{dx}{dy}\right| = f_X(x)\left|\frac{dx}{dy}\right|_{x=g^{-1}(y)}$$
+
+For many-to-one (e.g., $Y = X^2$), sum over roots:
+$$f_Y(y) = \sum_{i} f_X(x_i(y))\left|\frac{dx_i}{dy}\right|$$
+
+\textbf{Method 3: MGF Method}
+
+If $M_Y(t) = M_Z(t)$, then $Y \overset{d}{=} Z$ (same distribution).
+
+\textbf{Method 4: Jacobian (Bivariate)}
+
+For $(U,V) = g(X,Y)$ with inverse $(X,Y) = h(U,V)$:
+$$f_{U,V}(u,v) = f_{X,Y}(h_1(u,v), h_2(u,v)) |J|$$
+
+Jacobian: $J = \det\left[\frac{\partial(x,y)}{\partial(u,v)}\right]$
+
+\textbf{Convolution (Sum of Independent RVs)}
+
+If $X, Y$ independent, $Z = X + Y$:
+$$f_Z(z) = \int_{-\infty}^{\infty} f_X(x) f_Y(z-x) dx$$
+
+Discrete: $p_Z(z) = \sum_x p_X(x) p_Y(z-x)$
+
+\textbf{Order Statistics}
+
+For i.i.d. $X_1, \ldots, X_n$ with CDF $F$ and PDF $f$:
+
+\textbf{Minimum:} $X_{(1)} = \min\{X_1, \ldots, X_n\}$
+$$F_{X_{(1)}}(x) = 1 - [1-F(x)]^n$$
+$$f_{X_{(1)}}(x) = n[1-F(x)]^{n-1} f(x)$$
+
+\textbf{Maximum:} $X_{(n)} = \max\{X_1, \ldots, X_n\}$
+$$F_{X_{(n)}}(x) = [F(x)]^n$$
+$$f_{X_{(n)}}(x) = n[F(x)]^{n-1} f(x)$$
+
+\textbf{k-th order statistic:}
+$$f_{X_{(k)}}(x) \propto [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$$
+
+Uniform$(0,1)$: $X_{(k)} \sim \text{Beta}(k, n-k+1)$
+
+\textbf{Key Transformation Results}
+
+If $Z \sim N(0,1)$:
+\begin{itemize}
+\item $Z^2 \sim \chi^2(1)$
+\item $\sum_{i=1}^n Z_i^2 \sim \chi^2(n)$ (independent $Z_i$)
+\end{itemize}
+
+If $X \sim \text{Uniform}(0,1)$: $Y = -\log(X) \sim \text{Exp}(1)$
+
+Box-Muller: If $U_1, U_2 \sim U(0,1)$ indep, then
+$X = \sqrt{-2\ln U_1}\cos(2\pi U_2)$, $Y = \sqrt{-2\ln U_1}\sin(2\pi U_2)$
+are independent $N(0,1)$
+
+\vspace{2mm}
+\fbox{\large\textbf{2. Sampling Distributions}}
+\vspace{0.5mm}
+
+\textbf{Law of Large Numbers (LLN)}
+
+If $X_1, X_2, \ldots$ i.i.d. with $\E[X_i] = \mu$, $\Var(X_i) = \sigma^2 < \infty$:
+$$\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i \xrightarrow{P} \mu$$
+
+Chebyshev proof: $P(|\bar{X}_n - \mu| > \varepsilon) \le \frac{\sigma^2/n}{\varepsilon^2} \to 0$
+
+\textbf{Central Limit Theorem (CLT)}
+
+If $X_i$ i.i.d. with mean $\mu$ and variance $\sigma^2 > 0$:
+$$\frac{\bar{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} N(0,1)$$
+
+Equivalently: $\bar{X}_n \approx N(\mu, \sigma^2/n)$ for large $n$
+
+For sums: $S_n = \sum X_i \approx N(n\mu, n\sigma^2)$
+
+\textbf{Continuity Correction (Discrete → Continuous)}
+
+For $X \sim B(n,p)$: $P(X \le k) \approx P\left(Z \le \frac{k+0.5-np}{\sqrt{np(1-p)}}\right)$
+
+Rule: Normal approx reliable if $np(1-p) \gtrsim 10$
+
+\textbf{Chi-Square Distribution: $\chi^2(k)$}
+
+If $Z_1, \ldots, Z_k \sim N(0,1)$ independent:
+$$\sum_{i=1}^k Z_i^2 \sim \chi^2(k)$$
+
+PDF: $f(x) = \frac{1}{2^{k/2}\Gamma(k/2)} x^{k/2-1} e^{-x/2}$, $x > 0$
+
+$\E[\chi^2(k)] = k$, $\Var(\chi^2(k)) = 2k$
+
+MGF: $M(t) = (1-2t)^{-k/2}$, $t < 1/2$
+
+\textbf{Additivity:} If $X \sim \chi^2(k_1)$, $Y \sim \chi^2(k_2)$ independent:
+$$X + Y \sim \chi^2(k_1 + k_2)$$
+
+\textbf{t-Distribution: $t(n)$}
+
+If $Z \sim N(0,1)$, $V \sim \chi^2(n)$ independent:
+$$T = \frac{Z}{\sqrt{V/n}} \sim t(n)$$
+
+$\E[T] = 0$ ($n > 1$), $\Var(T) = \frac{n}{n-2}$ ($n > 2$)
+
+As $n \to \infty$: $t(n) \to N(0,1)$
+
+\textbf{F-Distribution: $F(n_1, n_2)$}
+
+If $V_1 \sim \chi^2(n_1)$, $V_2 \sim \chi^2(n_2)$ independent:
+$$F = \frac{V_1/n_1}{V_2/n_2} \sim F(n_1, n_2)$$
+
+$\E[F] = \frac{n_2}{n_2-2}$ ($n_2 > 2$)
+
+If $F \sim F(n_1, n_2)$: $\frac{1}{F} \sim F(n_2, n_1)$
+
+If $T \sim t(n)$: $T^2 \sim F(1, n)$
+
+\textbf{Normal Sample: Key Results}
+
+If $X_1, \ldots, X_n \sim N(\mu, \sigma^2)$ i.i.d.:
+\begin{itemize}
+\item $\bar{X} \sim N(\mu, \sigma^2/n)$
+\item $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$ where $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$
+\item $\bar{X}$ and $S^2$ are independent
+\item $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}} \sim N(0,1)$ ($\sigma$ known)
+\item $\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$ ($\sigma$ unknown)
+\end{itemize}
+
+\textbf{Delta Method}
+
+If $\sqrt{n}(\hat{\theta}_n - \theta) \Rightarrow N(0, \tau^2)$ and $g'(\theta) \neq 0$:
+$$\sqrt{n}(g(\hat{\theta}_n) - g(\theta)) \Rightarrow N(0, [g'(\theta)]^2 \tau^2)$$
+
+Variance: $\Var(g(\hat{\theta}_n)) \approx [g'(\theta)]^2 \Var(\hat{\theta}_n)$
+
+\vspace{2mm}
+\fbox{\large\textbf{3. Point Estimation}}
+\vspace{0.5mm}
+
+\textbf{Bias and MSE}
+
+Bias: $\text{Bias}(\hat{\theta}) = \E[\hat{\theta}] - \theta$
+
+Unbiased: $\text{Bias}(\hat{\theta}) = 0$
+
+Variance: $\Var(\hat{\theta}) = \E[(\hat{\theta} - \E[\hat{\theta}])^2]$
+
+MSE: $\text{MSE}(\hat{\theta}) = \Var(\hat{\theta}) + [\text{Bias}(\hat{\theta})]^2$
+
+\textbf{Consistency}
+
+$\hat{\theta}_n$ is consistent if $\hat{\theta}_n \xrightarrow{P} \theta$ as $n \to \infty$
+
+Sufficient condition: If unbiased and $\lim_{n \to \infty} \Var(\hat{\theta}_n) = 0$
+
+Or: If $\lim_{n \to \infty} \text{MSE}(\hat{\theta}_n) = 0$
+
+\textbf{Relative Efficiency}
+
+For two unbiased estimators $\hat{\theta}_1$, $\hat{\theta}_2$:
+$$\text{eff}(\hat{\theta}_1, \hat{\theta}_2) = \frac{\Var(\hat{\theta}_2)}{\Var(\hat{\theta}_1)}$$
+
+If eff $> 1$: $\hat{\theta}_1$ is more efficient (smaller variance)
+
+\textbf{Method of Moments (MoM)}
+
+Equate sample moments to population moments:
+\begin{enumerate}
+\item $\mu_j' = \E[X^j]$ (population moments)
+\item $m_j = \frac{1}{n}\sum X_i^j$ (sample moments)
+\item Solve: $m_j = \mu_j'(\theta)$ for $\theta$
+\end{enumerate}
+
+Properties: Simple, consistent, but may not be efficient
+
+\textbf{Maximum Likelihood (MLE)}
+
+Likelihood: $L(\theta) = \prod_{i=1}^n f(x_i; \theta)$
+
+Log-likelihood: $\ell(\theta) = \sum_{i=1}^n \log f(x_i; \theta)$
+
+MLE: $\hat{\theta}_{\text{MLE}} = \arg\max_{\theta} \ell(\theta)$
+
+Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
+
+\textbf{MLE Properties:}
+\begin{itemize}
+\item Invariance: If $\hat{\theta}$ is MLE of $\theta$, then $g(\hat{\theta})$ is MLE of $g(\theta)$
+\item Consistent under regularity conditions
+\item Asymptotically efficient
+\item Asymptotic normality: $\hat{\theta}_n \approx N(\theta, \frac{1}{nI(\theta)})$
+\end{itemize}
+
+\textbf{Fisher Information}
+
+Single observation:
+$$I(\theta) = \E\left[\left(\frac{\partial \log f(X;\theta)}{\partial \theta}\right)^2\right] = -\E\left[\frac{\partial^2 \log f(X;\theta)}{\partial \theta^2}\right]$$
+
+For i.i.d. sample: $I_n(\theta) = n \cdot I(\theta)$
+
+\textbf{Cramér-Rao Lower Bound (CRLB)}
+
+For any unbiased estimator $\hat{\theta}$:
+$$\Var(\hat{\theta}) \ge \frac{1}{I_n(\theta)} = \frac{1}{nI(\theta)}$$
+
+Efficiency: $\text{eff}(\hat{\theta}) = \frac{1/(nI(\theta))}{\Var(\hat{\theta})} \in [0,1]$
+
+Estimator achieving bound is called efficient.
+
+\textbf{Common Fisher Information:}
+\begin{itemize}
+\item Bernoulli$(p)$: $I(p) = \frac{1}{p(1-p)}$
+\item Poisson$(\lambda)$: $I(\lambda) = \frac{1}{\lambda}$
+\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $I(\mu) = \frac{1}{\sigma^2}$
+\item Exponential$(\lambda)$: $I(\lambda) = \frac{1}{\lambda^2}$
+\end{itemize}
+
+\textbf{Sufficiency}
+
+$T(X)$ is sufficient for $\theta$ if conditional distribution of $X$ given $T$ doesn't depend on $\theta$.
+
+\textbf{Factorization Theorem:}
+
+$T$ is sufficient iff likelihood factors as:
+$$L(\theta; x) = g(T(x), \theta) \cdot h(x)$$
+
+where $g$ depends on data only through $T$, $h$ doesn't depend on $\theta$.
+
+\textbf{Examples:}
+\begin{itemize}
+\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $\bar{X}$ is sufficient for $\mu$
+\item Poisson$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
+\item Exponential$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
+\end{itemize}
+
+\textbf{Completeness \& UMVUE}
+
+$T$ is complete if $\E[g(T)] = 0$ for all $\theta$ implies $P(g(T) = 0) = 1$.
+
+\textbf{Lehmann-Scheffé Theorem:}
+
+If $T$ is complete sufficient and $\phi(T)$ is unbiased for $\tau(\theta)$, then $\phi(T)$ is UMVUE (unique minimum variance unbiased estimator).
+
+\vspace{2mm}
+\fbox{\large\textbf{4. Confidence Intervals}}
+\vspace{0.5mm}
+
+\textbf{Definition}
+
+$(1-\alpha)$100\% CI for $\theta$: Random interval $[L, U]$ with
+$$P(L \le \theta \le U) = 1 - \alpha$$
+
+Interpretation: $(1-\alpha)$100\% of intervals contain true $\theta$.
+
+\textbf{Common CIs}
+
+\textbf{Mean ($\sigma$ known, large $n$):}
+$$\bar{X} \pm z_{\alpha/2} \frac{\sigma}{\sqrt{n}}$$
+
+\textbf{Mean ($\sigma$ unknown, Normal):}
+$$\bar{X} \pm t_{\alpha/2, n-1} \frac{s}{\sqrt{n}}$$
+
+\textbf{Proportion (large $n$):}
+$$\hat{p} \pm z_{\alpha/2} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
+
+\textbf{Variance (Normal):}
+$$\frac{(n-1)s^2}{\chi^2_{\alpha/2, n-1}} \le \sigma^2 \le \frac{(n-1)s^2}{\chi^2_{1-\alpha/2, n-1}}$$
+
+\textbf{Ratio of Variances:}
+$$\frac{s_1^2/s_2^2}{F_{\alpha/2, n_1-1, n_2-1}} \le \frac{\sigma_1^2}{\sigma_2^2} \le \frac{s_1^2}{s_2^2} \cdot F_{\alpha/2, n_1-1, n_2-1}$$
+
+\textbf{Two-Sample Mean (equal var):}
+$$(\bar{X}_1 - \bar{X}_2) \pm t_{\alpha/2, n_1+n_2-2} \cdot s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}$$
+
+where $s_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1+n_2-2}$
+
+\textbf{Sample Size Determination}
+
+For mean with margin $E$ and confidence $(1-\alpha)$:
+$$n = \left(\frac{z_{\alpha/2} \sigma}{E}\right)^2$$
+
+For proportion:
+$$n = \hat{p}(1-\hat{p})\left(\frac{z_{\alpha/2}}{E}\right)^2$$
+
+Conservative (no prior $\hat{p}$): Use $\hat{p} = 0.5$ (gives largest $n$)
+
+\vspace{2mm}
+\fbox{\large\textbf{5. Hypothesis Testing}}
+\vspace{0.5mm}
+
+\textbf{Framework}
+
+Null hypothesis $H_0$: Status quo (assume true)
+
+Alternative $H_1$: What we want evidence for
+
+Types:
+\begin{itemize}
+\item Two-sided: $H_0: \theta = \theta_0$ vs $H_1: \theta \neq \theta_0$
+\item Upper: $H_0: \theta \le \theta_0$ vs $H_1: \theta > \theta_0$
+\item Lower: $H_0: \theta \ge \theta_0$ vs $H_1: \theta < \theta_0$
+\end{itemize}
+
+\textbf{Error Types}
+
+Type I Error (False Positive): $\alpha = P(\text{Reject } H_0 | H_0 \text{ true})$
+
+Type II Error (False Negative): $\beta = P(\text{Fail reject } H_0 | H_1 \text{ true})$
+
+Power: $1 - \beta = P(\text{Reject } H_0 | H_1 \text{ true})$
+
+\textbf{p-Value}
+
+Probability under $H_0$ of observing test statistic as extreme or more extreme.
+
+Decision: Reject $H_0$ if $p \le \alpha$
+
+Interpretation:
+\begin{itemize}
+\item $p \le 0.01$: Very strong evidence against $H_0$
+\item $0.01 < p \le 0.05$: Moderate evidence
+\item $0.05 < p \le 0.10$: Weak evidence
+\item $p > 0.10$: Little/no evidence
+\end{itemize}
+
+\textbf{Common Test Statistics}
+
+\textbf{Z-test (mean, $\sigma$ known):}
+$$Z = \frac{\bar{X} - \mu_0}{\sigma/\sqrt{n}} \sim N(0,1) \text{ under } H_0$$
+
+\textbf{t-test (mean, $\sigma$ unknown):}
+$$t = \frac{\bar{X} - \mu_0}{s/\sqrt{n}} \sim t_{n-1} \text{ under } H_0$$
+
+\textbf{Proportion test (large $n$):}
+$$Z = \frac{\hat{p} - p_0}{\sqrt{p_0(1-p_0)/n}} \sim N(0,1) \text{ under } H_0$$
+
+\textbf{Chi-square (variance):}
+$$\chi^2 = \frac{(n-1)s^2}{\sigma_0^2} \sim \chi^2_{n-1} \text{ under } H_0$$
+
+\textbf{Two-sample t-test (equal var):}
+$$t = \frac{\bar{X}_1 - \bar{X}_2}{s_p\sqrt{1/n_1 + 1/n_2}} \sim t_{n_1+n_2-2} \text{ under } H_0$$
+
+\textbf{F-test (variance ratio):}
+$$F = \frac{s_1^2}{s_2^2} \sim F_{n_1-1, n_2-1} \text{ under } H_0: \sigma_1^2 = \sigma_2^2$$
+
+\textbf{Rejection Regions}
+
+\textbf{Two-sided:}
+\begin{itemize}
+\item Z or t: $|T| > t_{\alpha/2}$
+\item $\chi^2$: $\chi^2 < \chi^2_{1-\alpha/2}$ or $\chi^2 > \chi^2_{\alpha/2}$
+\item F: $F < F_{1-\alpha/2}$ or $F > F_{\alpha/2}$
+\end{itemize}
+
+\textbf{One-sided (upper):}
+\begin{itemize}
+\item Z or t: $T > t_\alpha$
+\item $\chi^2$: $\chi^2 > \chi^2_\alpha$
+\item F: $F > F_\alpha$
+\end{itemize}
+
+\textbf{Power \& Sample Size}
+
+Power: $\pi(\mu_1) = \Phi\left(\frac{\mu_1 - \mu_0}{\sigma/\sqrt{n}} - z_\alpha\right)$
+
+Sample size: $n = \left(\frac{(z_\alpha + z_\beta)\sigma}{\mu_1 - \mu_0}\right)^2$
+
+Two-sided: Use $z_{\alpha/2}$ instead of $z_\alpha$
+
+\textbf{CI-Testing Duality}
+
+If $(1-\alpha)$ CI for $\theta$ is $[L, U]$:
+\begin{itemize}
+\item $\theta_0 \notin [L, U]$: Reject $H_0: \theta = \theta_0$ at level $\alpha$
+\item $\theta_0 \in [L, U]$: Fail to reject $H_0$
+\end{itemize}
+
+\textbf{Multiple Testing}
+
+Bonferroni correction for $m$ tests with FWER $\alpha$:
+
+Test each at level $\alpha/m$
+
+Family-wise error rate without correction: $\approx m\alpha$
+
+\vspace{2mm}
+\fbox{\large\textbf{6. Likelihood Ratio Tests}}
+\vspace{0.5mm}
+
+\textbf{Neyman-Pearson Lemma}
+
+For simple $H_0: \theta = \theta_0$ vs simple $H_1: \theta = \theta_1$:
+
+Most powerful test of size $\alpha$ rejects when:
+$$\Lambda(x) = \frac{L(\theta_0; x)}{L(\theta_1; x)} \le k$$
+
+where $k$ satisfies $P(\Lambda \le k | H_0) = \alpha$
+
+\textbf{General LRT}
+
+For composite hypotheses $H_0: \theta \in \Theta_0$ vs $H_1: \theta \in \Theta_1$:
+
+Likelihood ratio:
+$$\lambda(x) = \frac{\sup_{\theta \in \Theta_0} L(\theta; x)}{\sup_{\theta \in \Theta} L(\theta; x)} = \frac{L(\hat{\theta}_0; x)}{L(\hat{\theta}; x)}$$
+
+where $\hat{\theta}_0$ = MLE under $H_0$, $\hat{\theta}$ = unrestricted MLE
+
+Properties: $0 \le \lambda(x) \le 1$, smaller $\lambda$ → stronger evidence against $H_0$
+
+\textbf{Wilks' Theorem}
+
+Under $H_0$ and regularity conditions:
+$$-2\log\lambda(X) \xrightarrow{d} \chi^2_\nu$$
+
+where $\nu = \dim(\Theta) - \dim(\Theta_0)$ (df = difference in parameters)
+
+Rejection: $-2\log\lambda(x) > \chi^2_{\alpha, \nu}$
+
+\textbf{Three Asymptotic Tests}
+
+For $H_0: \theta = \theta_0$ vs $H_1: \theta \neq \theta_0$:
+
+\textbf{1. Wald Test:}
+$$W = n(\hat{\theta} - \theta_0)^2 I(\hat{\theta}) \xrightarrow{d} \chi^2_1$$
+
+Based on MLE and asymptotic normality.
+
+\textbf{2. Score Test (Rao's):}
+$$\text{Score} = \frac{[S(\theta_0)]^2}{nI(\theta_0)} \xrightarrow{d} \chi^2_1$$
+
+where $S(\theta_0) = \frac{\partial \log L}{\partial \theta}\Big|_{\theta=\theta_0}$
+
+Based on score evaluated at $\theta_0$.
+
+\textbf{3. LRT:}
+$$\text{LRT} = -2\log\lambda = 2[\ell(\hat{\theta}) - \ell(\theta_0)] \xrightarrow{d} \chi^2_1$$
+
+All three asymptotically equivalent. Ordering: Score $\le$ LRT $\le$ Wald
+
+\textbf{Goodness-of-Fit}
+
+Chi-square test:
+$$\chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i} \xrightarrow{d} \chi^2_{k-1-p}$$
+
+$O_i$ = observed, $E_i$ = expected, $p$ = # params
+
+\vspace{2mm}
+\fbox{\large\textbf{7. Key Distributions Summary}}
+\vspace{0.5mm}
+
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Dist} & \textbf{Mean} & \textbf{Var} & \textbf{Support} \\
+\hline
+$\chi^2(k)$ & $k$ & $2k$ & $(0, \infty)$ \\
+$t(n)$ & 0 & $\frac{n}{n-2}$ & $(-\infty, \infty)$ \\
+$F(n_1,n_2)$ & $\frac{n_2}{n_2-2}$ & - & $(0, \infty)$ \\
+\hline
+\end{tabular}
+
+\textbf{Relationships:}
+\begin{itemize}
+\item $\sum_{i=1}^k Z_i^2 \sim \chi^2(k)$, $Z_i \sim N(0,1)$ iid
+\item $\frac{Z}{\sqrt{V/n}} \sim t(n)$, $Z \sim N(0,1)$, $V \sim \chi^2(n)$
+\item $\frac{V_1/n_1}{V_2/n_2} \sim F(n_1,n_2)$, $V_i \sim \chi^2(n_i)$
+\item $T^2 \sim F(1,n)$ if $T \sim t(n)$
+\item $\chi^2(k_1) + \chi^2(k_2) = \chi^2(k_1+k_2)$ (independent)
+\end{itemize}
+
+\vspace{2mm}
+\fbox{\large\textbf{8. Important Formulas}}
+\vspace{0.5mm}
+
+\textbf{Sample Statistics (Normal):}
+$$\bar{X} \sim N(\mu, \sigma^2/n)$$
+$$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$$
+$$\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$$
+
+\textbf{Two Samples (Normal, equal var):}
+$$\frac{s_1^2/\sigma_1^2}{s_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$$
+
+\textbf{Asymptotic Normality:}
+$$\hat{\theta}_n \approx N\left(\theta, \frac{1}{nI(\theta)}\right)$$
+
+\textbf{Delta Method:}
+$$g(\hat{\theta}_n) \approx N\left(g(\theta), \frac{[g'(\theta)]^2}{nI(\theta)}\right)$$
+
+\textbf{LRT Asymptotic:}
+$$-2\log\lambda \xrightarrow{d} \chi^2_\nu$$
+
+\end{multicols}
+\end{document}
