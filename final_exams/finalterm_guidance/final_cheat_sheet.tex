@@ -92,7 +92,7 @@ $$F_{X_{(n)}}(x) = [F(x)]^n$$
 $$f_{X_{(n)}}(x) = n[F(x)]^{n-1} f(x)$$
 
 \textbf{k-th order statistic:}
-$$f_{X_{(k)}}(x) \propto [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$$
+$$f_{X_{(k)}}(x) = \frac{n!}{(k-1)!(n-k)!} [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$$
 
 Uniform$(0,1)$: $X_{(k)} \sim \text{Beta}(k, n-k+1)$
 
@@ -109,6 +109,14 @@ If $X \sim \text{Uniform}(0,1)$: $Y = -\log(X) \sim \text{Exp}(1)$
 Box-Muller: If $U_1, U_2 \sim U(0,1)$ indep, then
 $X = \sqrt{-2\ln U_1}\cos(2\pi U_2)$, $Y = \sqrt{-2\ln U_1}\sin(2\pi U_2)$
 are independent $N(0,1)$
+
+\textbf{Sums of Independent RVs:}
+\begin{itemize}
+\item $X_i \sim \text{Exp}(\lambda)$ iid: $\sum_{i=1}^n X_i \sim \text{Gamma}(n, \lambda)$
+\item $X_i \sim \text{Poisson}(\lambda_i)$ indep: $\sum X_i \sim \text{Poisson}(\sum \lambda_i)$
+\item $X_i \sim N(\mu_i, \sigma_i^2)$ indep: $\sum a_i X_i \sim N(\sum a_i\mu_i, \sum a_i^2\sigma_i^2)$
+\item $X_i \sim \text{Binomial}(n_i, p)$ indep: $\sum X_i \sim \text{Binomial}(\sum n_i, p)$
+\end{itemize}
 
 \vspace{2mm}
 \fbox{\large\textbf{2. Sampling Distributions}}
@@ -238,6 +246,15 @@ MLE: $\hat{\theta}_{\text{MLE}} = \arg\max_{\theta} \ell(\theta)$
 
 Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
 
+\textbf{Common MLEs:}
+\begin{itemize}
+\item Bernoulli$(p)$: $\hat{p} = \bar{X}$
+\item Poisson$(\lambda)$: $\hat{\lambda} = \bar{X}$
+\item Normal$(\mu, \sigma^2)$: $\hat{\mu} = \bar{X}$, $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$
+\item Exponential$(\lambda)$: $\hat{\lambda} = \frac{1}{\bar{X}}$
+\item Uniform$(0, \theta)$: $\hat{\theta} = X_{(n)} = \max\{X_1, \ldots, X_n\}$
+\end{itemize}
+
 \textbf{MLE Properties:}
 \begin{itemize}
 \item Invariance: If $\hat{\theta}$ is MLE of $\theta$, then $g(\hat{\theta})$ is MLE of $g(\theta)$
@@ -245,6 +262,12 @@ Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
 \item Asymptotically efficient
 \item Asymptotic normality: $\hat{\theta}_n \approx N(\theta, \frac{1}{nI(\theta)})$
 \end{itemize}
+
+\textbf{Score Function}
+
+Score: $S(\theta) = \frac{\partial \ell(\theta)}{\partial \theta} = \sum_{i=1}^n \frac{\partial \log f(X_i;\theta)}{\partial \theta}$
+
+Properties: $\E[S(\theta)] = 0$, $\Var(S(\theta)) = I_n(\theta)$
 
 \textbf{Fisher Information}
 
@@ -306,6 +329,14 @@ $(1-\alpha)$100\% CI for $\theta$: Random interval $[L, U]$ with
 $$P(L \le \theta \le U) = 1 - \alpha$$
 
 Interpretation: $(1-\alpha)$100\% of intervals contain true $\theta$.
+
+\textbf{Pivotal Quantity}
+
+A function $Q(X_1, \ldots, X_n; \theta)$ whose distribution does not depend on $\theta$.
+
+Examples: $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}} \sim N(0,1)$, $\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$
+
+To construct CI: Find $a, b$ with $P(a \le Q \le b) = 1-\alpha$, then solve for $\theta$.
 
 \textbf{Common CIs}
 
