@@ -217,6 +217,8 @@ $$\text{eff}(\hat{\theta}_1, \hat{\theta}_2) = \frac{\Var(\hat{\theta}_2)}{\Var(
 
 If eff $> 1$: $\hat{\theta}_1$ is more efficient (smaller variance)
 
+\textit{Example:} For $N(\mu,\sigma^2)$: $\text{eff}(\bar{X}, \tilde{X}) = \frac{\pi}{2} \approx 1.57$ (mean vs median)
+
 \textbf{Method of Moments (MoM)}
 
 Equate sample moments to population moments:
@@ -246,55 +248,13 @@ Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
 \item Asymptotic normality: $\hat{\theta}_n \approx N(\theta, \frac{1}{nI(\theta)})$
 \end{itemize}
 
-\textbf{Fisher Information}
-
-Single observation:
-$$I(\theta) = \E\left[\left(\frac{\partial \log f(X;\theta)}{\partial \theta}\right)^2\right] = -\E\left[\frac{\partial^2 \log f(X;\theta)}{\partial \theta^2}\right]$$
-
-For i.i.d. sample: $I_n(\theta) = n \cdot I(\theta)$
-
-\textbf{Cramér-Rao Lower Bound (CRLB)}
-
-For any unbiased estimator $\hat{\theta}$:
-$$\Var(\hat{\theta}) \ge \frac{1}{I_n(\theta)} = \frac{1}{nI(\theta)}$$
-
-Efficiency: $\text{eff}(\hat{\theta}) = \frac{1/(nI(\theta))}{\Var(\hat{\theta})} \in [0,1]$
-
-Estimator achieving bound is called efficient.
-
-\textbf{Common Fisher Information:}
+\textbf{Key MLE Examples:}
 \begin{itemize}
-\item Bernoulli$(p)$: $I(p) = \frac{1}{p(1-p)}$
-\item Poisson$(\lambda)$: $I(\lambda) = \frac{1}{\lambda}$
-\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $I(\mu) = \frac{1}{\sigma^2}$
-\item Exponential$(\lambda)$: $I(\lambda) = \frac{1}{\lambda^2}$
+\item Bernoulli$(p)$: $\hat{p} = \bar{X}$
+\item Poisson$(\lambda)$: $\hat{\lambda} = \bar{X}$
+\item $U(0,\theta)$: $\hat{\theta} = \max\{X_1,\ldots,X_n\} = X_{(n)}$ (boundary case)
+\item $N(\mu,\sigma^2)$: $\hat{\mu} = \bar{X}$, $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ (biased)
 \end{itemize}
-
-\textbf{Sufficiency}
-
-$T(X)$ is sufficient for $\theta$ if conditional distribution of $X$ given $T$ doesn't depend on $\theta$.
-
-\textbf{Factorization Theorem:}
-
-$T$ is sufficient iff likelihood factors as:
-$$L(\theta; x) = g(T(x), \theta) \cdot h(x)$$
-
-where $g$ depends on data only through $T$, $h$ doesn't depend on $\theta$.
-
-\textbf{Examples:}
-\begin{itemize}
-\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $\bar{X}$ is sufficient for $\mu$
-\item Poisson$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
-\item Exponential$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
-\end{itemize}
-
-\textbf{Completeness \& UMVUE}
-
-$T$ is complete if $\E[g(T)] = 0$ for all $\theta$ implies $P(g(T) = 0) = 1$.
-
-\textbf{Lehmann-Scheffé Theorem:}
-
-If $T$ is complete sufficient and $\phi(T)$ is unbiased for $\tau(\theta)$, then $\phi(T)$ is UMVUE (unique minimum variance unbiased estimator).
 
 \vspace{2mm}
 \fbox{\large\textbf{4. Confidence Intervals}}
@@ -306,6 +266,13 @@ $(1-\alpha)$100\% CI for $\theta$: Random interval $[L, U]$ with
 $$P(L \le \theta \le U) = 1 - \alpha$$
 
 Interpretation: $(1-\alpha)$100\% of intervals contain true $\theta$.
+
+\textbf{Pivotal Quantity Method:}
+\begin{enumerate}
+\item Find pivotal $Q(X,\theta)$ with known distribution (indep of $\theta$)
+\item Find constants: $P(a \le Q \le b) = 1 - \alpha$
+\item Invert to get: $P(L(X) \le \theta \le U(X)) = 1 - \alpha$
+\end{enumerate}
 
 \textbf{Common CIs}
 
@@ -430,14 +397,6 @@ If $(1-\alpha)$ CI for $\theta$ is $[L, U]$:
 \item $\theta_0 \in [L, U]$: Fail to reject $H_0$
 \end{itemize}
 
-\textbf{Multiple Testing}
-
-Bonferroni correction for $m$ tests with FWER $\alpha$:
-
-Test each at level $\alpha/m$
-
-Family-wise error rate without correction: $\approx m\alpha$
-
 \vspace{2mm}
 \fbox{\large\textbf{6. Likelihood Ratio Tests}}
 \vspace{0.5mm}
@@ -455,10 +414,16 @@ where $k$ satisfies $P(\Lambda \le k | H_0) = \alpha$
 
 For composite hypotheses $H_0: \theta \in \Theta_0$ vs $H_1: \theta \in \Theta_1$:
 
-Likelihood ratio:
-$$\lambda(x) = \frac{\sup_{\theta \in \Theta_0} L(\theta; x)}{\sup_{\theta \in \Theta} L(\theta; x)} = \frac{L(\hat{\theta}_0; x)}{L(\hat{\theta}; x)}$$
+\textbf{Parameter Spaces:}
+\begin{itemize}
+\item $\Omega$ = full parameter space (unrestricted)
+\item $\Omega_0$ = restricted parameter space under $H_0$
+\end{itemize}
 
-where $\hat{\theta}_0$ = MLE under $H_0$, $\hat{\theta}$ = unrestricted MLE
+Likelihood ratio:
+$$\lambda(x) = \frac{\sup_{\theta \in \Omega_0} L(\theta; x)}{\sup_{\theta \in \Omega} L(\theta; x)} = \frac{L(\hat{\theta}_0; x)}{L(\hat{\theta}; x)}$$
+
+where $\hat{\theta}_0$ = MLE under $H_0$ (restricted), $\hat{\theta}$ = MLE (unrestricted)
 
 Properties: $0 \le \lambda(x) \le 1$, smaller $\lambda$ → stronger evidence against $H_0$
 
@@ -470,34 +435,6 @@ $$-2\log\lambda(X) \xrightarrow{d} \chi^2_\nu$$
 where $\nu = \dim(\Theta) - \dim(\Theta_0)$ (df = difference in parameters)
 
 Rejection: $-2\log\lambda(x) > \chi^2_{\alpha, \nu}$
-
-\textbf{Three Asymptotic Tests}
-
-For $H_0: \theta = \theta_0$ vs $H_1: \theta \neq \theta_0$:
-
-\textbf{1. Wald Test:}
-$$W = n(\hat{\theta} - \theta_0)^2 I(\hat{\theta}) \xrightarrow{d} \chi^2_1$$
-
-Based on MLE and asymptotic normality.
-
-\textbf{2. Score Test (Rao's):}
-$$\text{Score} = \frac{[S(\theta_0)]^2}{nI(\theta_0)} \xrightarrow{d} \chi^2_1$$
-
-where $S(\theta_0) = \frac{\partial \log L}{\partial \theta}\Big|_{\theta=\theta_0}$
-
-Based on score evaluated at $\theta_0$.
-
-\textbf{3. LRT:}
-$$\text{LRT} = -2\log\lambda = 2[\ell(\hat{\theta}) - \ell(\theta_0)] \xrightarrow{d} \chi^2_1$$
-
-All three asymptotically equivalent. Ordering: Score $\le$ LRT $\le$ Wald
-
-\textbf{Goodness-of-Fit}
-
-Chi-square test:
-$$\chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i} \xrightarrow{d} \chi^2_{k-1-p}$$
-
-$O_i$ = observed, $E_i$ = expected, $p$ = # params
 
 \vspace{2mm}
 \fbox{\large\textbf{7. Key Distributions Summary}}
@@ -534,11 +471,11 @@ $$\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$$
 \textbf{Two Samples (Normal, equal var):}
 $$\frac{s_1^2/\sigma_1^2}{s_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$$
 
-\textbf{Asymptotic Normality:}
-$$\hat{\theta}_n \approx N\left(\theta, \frac{1}{nI(\theta)}\right)$$
+\textbf{MLE Asymptotic Normality:}
+$$\hat{\theta}_{\text{MLE}} \approx N\left(\theta, \sigma^2_{\text{MLE}}\right) \text{ for large } n$$
 
 \textbf{Delta Method:}
-$$g(\hat{\theta}_n) \approx N\left(g(\theta), \frac{[g'(\theta)]^2}{nI(\theta)}\right)$$
+$$g(\hat{\theta}_n) \approx N\left(g(\theta), [g'(\theta)]^2 \Var(\hat{\theta}_n)\right)$$
 
 \textbf{LRT Asymptotic:}
 $$-2\log\lambda \xrightarrow{d} \chi^2_\nu$$
