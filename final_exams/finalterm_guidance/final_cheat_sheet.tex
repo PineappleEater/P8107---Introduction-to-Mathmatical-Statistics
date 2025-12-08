@@ -1,16 +1,15 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[10pt,letterpaper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{multicol}
 \usepackage{calc}
 \usepackage{ifthen}
-\usepackage[top=0.9cm,left=0.9cm,right=0.9cm,bottom=1.4cm]{geometry}
+\usepackage[letterpaper,top=0.9cm,left=0.9cm,right=0.9cm,bottom=1.4cm]{geometry}
 \usepackage{amsmath,amsthm,amsfonts,amssymb}
 \usepackage{color,graphicx}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
-\usepackage{newtxtext,newtxmath}
 
-% 紧凑排版
+% Compact layout
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt plus 0.5ex}
 
@@ -37,85 +36,70 @@
 
 \begin{center}
 \LARGE{\textbf{Mathematical Statistics Final Cheat Sheet}} \\[0.5em]
-\small{Weeks 9-14: Functions of RVs, Sampling, Estimation \& Testing}\\
+% \small{Weeks 9-14: Based on 2022-2024 Exam Analysis}\\
 \small{Xuange Liang\\xl3493@cumc.columbia.edu}
 \end{center}
 
 \vspace{2mm}
-\fbox{\large\textbf{1. Functions of Random Variables}}
+\fbox{\large\textbf{1. Mathematical Tools}}
 \vspace{0.5mm}
 
-\textbf{Method 1: CDF Method (Univariate)}
+\textbf{Differentiation Rules:}
+\begin{itemize}
+\item Product: $(uv)' = u'v + uv'$
+\item Quotient: $(\frac{u}{v})' = \frac{u'v - uv'}{v^2}$
+\item Chain: $\frac{d}{dx}f(g(x)) = f'(g(x))g'(x)$
+\item Logarithm: $\frac{d}{dx}\ln(f(x)) = \frac{f'(x)}{f(x)}$
+\item Exponential: $\frac{d}{dx}e^{f(x)} = f'(x)e^{f(x)}$
+\end{itemize}
 
-For $Y = g(X)$:
-\begin{enumerate}
-\item Find CDF: $F_Y(y) = P(Y \le y) = P(g(X) \le y)$
-\item Differentiate: $f_Y(y) = F_Y'(y)$
-\end{enumerate}
+\textbf{Integration by Parts:}
+$$\int u \, dv = uv - \int v \, du$$
+\begin{itemize}
+\item Choice order (L.I.A.T.E): Log, Inverse trig, Algebraic, Trig, Exponential
+\end{itemize}
 
-\textbf{Method 2: Transformation Formula}
+\textbf{Gamma Function:}
+\begin{itemize}
+\item $\Gamma(\alpha) = \int_0^\infty x^{\alpha-1}e^{-x} dx$
+\item Property: $\Gamma(\alpha) = (\alpha-1)\Gamma(\alpha-1)$
+\item Integer: $\Gamma(n) = (n-1)!$
+\end{itemize}
 
-If $Y = g(X)$ is monotonic and differentiable:
-$$f_Y(y) = f_X(g^{-1}(y))\left|\frac{dx}{dy}\right| = f_X(x)\left|\frac{dx}{dy}\right|_{x=g^{-1}(y)}$$
+\vspace{2mm}
+\fbox{\large\textbf{1.5 Key Transformations}}
+\vspace{0.5mm}
 
-For many-to-one (e.g., $Y = X^2$), sum over roots:
-$$f_Y(y) = \sum_{i} f_X(x_i(y))\left|\frac{dx_i}{dy}\right|$$
+\textbf{Transformation Formula (Univariate)}
 
-\textbf{Method 3: MGF Method}
+If $Y = g(X)$ is monotonic:
+$$f_Y(y) = f_X(g^{-1}(y))\left|\frac{dx}{dy}\right|$$
 
-If $M_Y(t) = M_Z(t)$, then $Y \overset{d}{=} Z$ (same distribution).
+For many-to-one (e.g., $Y = X^2$), sum over roots
 
-\textbf{Method 4: Jacobian (Bivariate)}
+\textbf{Jacobian (Bivariate)}
 
-For $(U,V) = g(X,Y)$ with inverse $(X,Y) = h(U,V)$:
-$$f_{U,V}(u,v) = f_{X,Y}(h_1(u,v), h_2(u,v)) |J|$$
+For $(U,V) = g(X,Y)$:
+$$f_{U,V}(u,v) = f_{X,Y}(x,y) |J|$$
 
-Jacobian: $J = \det\left[\frac{\partial(x,y)}{\partial(u,v)}\right]$
-
-\textbf{Convolution (Sum of Independent RVs)}
-
-If $X, Y$ independent, $Z = X + Y$:
-$$f_Z(z) = \int_{-\infty}^{\infty} f_X(x) f_Y(z-x) dx$$
-
-Discrete: $p_Z(z) = \sum_x p_X(x) p_Y(z-x)$
+where $J = \det\left[\begin{matrix}\frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\ \frac{\partial y}{\partial u} & \frac{\partial y}{\partial v}\end{matrix}\right]$
 
 \textbf{Order Statistics}
 
-For i.i.d. $X_1, \ldots, X_n$ with CDF $F$ and PDF $f$:
+For i.i.d. $X_1, \ldots, X_n$ with CDF $F$, PDF $f$:
 
-\textbf{Minimum:} $X_{(1)} = \min\{X_1, \ldots, X_n\}$
-$$F_{X_{(1)}}(x) = 1 - [1-F(x)]^n$$
-$$f_{X_{(1)}}(x) = n[1-F(x)]^{n-1} f(x)$$
+\textit{Minimum:} $f_{X_{(1)}}(x) = n[1-F(x)]^{n-1} f(x)$
 
-\textbf{Maximum:} $X_{(n)} = \max\{X_1, \ldots, X_n\}$
-$$F_{X_{(n)}}(x) = [F(x)]^n$$
-$$f_{X_{(n)}}(x) = n[F(x)]^{n-1} f(x)$$
+\textit{Maximum:} $f_{X_{(n)}}(x) = n[F(x)]^{n-1} f(x)$
 
-\textbf{k-th order statistic:}
-$$f_{X_{(k)}}(x) = \frac{n!}{(k-1)!(n-k)!} [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$$
-
-Uniform$(0,1)$: $X_{(k)} \sim \text{Beta}(k, n-k+1)$
-
-\textbf{Key Transformation Results}
-
-If $Z \sim N(0,1)$:
-\begin{itemize}
-\item $Z^2 \sim \chi^2(1)$
-\item $\sum_{i=1}^n Z_i^2 \sim \chi^2(n)$ (independent $Z_i$)
-\end{itemize}
-
-If $X \sim \text{Uniform}(0,1)$: $Y = -\log(X) \sim \text{Exp}(1)$
-
-Box-Muller: If $U_1, U_2 \sim U(0,1)$ indep, then
-$X = \sqrt{-2\ln U_1}\cos(2\pi U_2)$, $Y = \sqrt{-2\ln U_1}\sin(2\pi U_2)$
-are independent $N(0,1)$
+\textit{k-th:} $f_{X_{(k)}}(x) = \frac{n!}{(k-1)!(n-k)!} [F(x)]^{k-1} [1-F(x)]^{n-k} f(x)$
 
 \textbf{Sums of Independent RVs:}
 \begin{itemize}
-\item $X_i \sim \text{Exp}(\lambda)$ iid: $\sum_{i=1}^n X_i \sim \text{Gamma}(n, \lambda)$
-\item $X_i \sim \text{Poisson}(\lambda_i)$ indep: $\sum X_i \sim \text{Poisson}(\sum \lambda_i)$
-\item $X_i \sim N(\mu_i, \sigma_i^2)$ indep: $\sum a_i X_i \sim N(\sum a_i\mu_i, \sum a_i^2\sigma_i^2)$
-\item $X_i \sim \text{Binomial}(n_i, p)$ indep: $\sum X_i \sim \text{Binomial}(\sum n_i, p)$
+\item $X_i \sim \text{Exp}(\lambda)$ iid: $\sum X_i \sim \text{Gamma}(n, \lambda)$
+\item $X_i \sim \text{Poisson}(\lambda_i)$: $\sum X_i \sim \text{Poisson}(\sum \lambda_i)$
+\item $X_i \sim N(\mu_i, \sigma_i^2)$: $\sum a_i X_i \sim N(\sum a_i\mu_i, \sum a_i^2\sigma_i^2)$
+\item $X_i \sim \text{Binomial}(n_i, p)$: $\sum X_i \sim \text{Binomial}(\sum n_i, p)$
 \end{itemize}
 
 \vspace{2mm}
@@ -196,47 +180,93 @@ $$\sqrt{n}(g(\hat{\theta}_n) - g(\theta)) \Rightarrow N(0, [g'(\theta)]^2 \tau^2
 
 Variance: $\Var(g(\hat{\theta}_n)) \approx [g'(\theta)]^2 \Var(\hat{\theta}_n)$
 
+\textbf{Key Distribution Relationships:}
+\begin{itemize}
+\item $Z^2 \sim \chi^2(1)$ if $Z \sim N(0,1)$
+\item $\chi^2(k_1) + \chi^2(k_2) = \chi^2(k_1+k_2)$ (indep)
+\item $T^2 \sim F(1,n)$ if $T \sim t(n)$
+\item $1/F \sim F(n_2, n_1)$ if $F \sim F(n_1, n_2)$
+\item As $n \to \infty$: $t(n) \to N(0,1)$
+\end{itemize}
+
 \vspace{2mm}
 \fbox{\large\textbf{3. Point Estimation}}
 \vspace{0.5mm}
 
-\textbf{Bias and MSE}
+\textbf{Estimator Properties}
 
-Bias: $\text{Bias}(\hat{\theta}) = \E[\hat{\theta}] - \theta$
+\textit{Bias:} $\text{Bias}(\hat{\theta}) = \E[\hat{\theta}] - \theta$
 
-Unbiased: $\text{Bias}(\hat{\theta}) = 0$
+\textit{Variance:} $\Var(\hat{\theta}) = \E[(\hat{\theta} - \E[\hat{\theta}])^2]$
 
-Variance: $\Var(\hat{\theta}) = \E[(\hat{\theta} - \E[\hat{\theta}])^2]$
+\textit{MSE:} $\text{MSE}(\hat{\theta}) = \Var(\hat{\theta}) + [\text{Bias}(\hat{\theta})]^2$
 
-MSE: $\text{MSE}(\hat{\theta}) = \Var(\hat{\theta}) + [\text{Bias}(\hat{\theta})]^2$
+\textbf{Key Result:} Unbiased $\Rightarrow$ MSE $= \Var$
 
 \textbf{Consistency}
 
-$\hat{\theta}_n$ is consistent if $\hat{\theta}_n \xrightarrow{P} \theta$ as $n \to \infty$
+$\hat{\theta}_n \xrightarrow{P} \theta$ as $n \to \infty$ (converges in probability)
 
-Sufficient condition: If unbiased and $\lim_{n \to \infty} \Var(\hat{\theta}_n) = 0$
-
-Or: If $\lim_{n \to \infty} \text{MSE}(\hat{\theta}_n) = 0$
+\textit{Sufficient conditions:}
+\begin{itemize}
+\item Unbiased + $\Var(\hat{\theta}_n) \to 0$
+\item $\text{MSE}(\hat{\theta}_n) \to 0$
+\item $\text{Bias}(\hat{\theta}_n) \to 0$ and $\Var(\hat{\theta}_n) \to 0$
+\end{itemize}
 
 \textbf{Relative Efficiency}
 
-For two unbiased estimators $\hat{\theta}_1$, $\hat{\theta}_2$:
+For unbiased $\hat{\theta}_1$, $\hat{\theta}_2$:
 $$\text{eff}(\hat{\theta}_1, \hat{\theta}_2) = \frac{\Var(\hat{\theta}_2)}{\Var(\hat{\theta}_1)}$$
 
-If eff $> 1$: $\hat{\theta}_1$ is more efficient (smaller variance)
+eff $> 1$: $\hat{\theta}_1$ more efficient
 
-\textit{Example:} For $N(\mu,\sigma^2)$: $\text{eff}(\bar{X}, \tilde{X}) = \frac{\pi}{2} \approx 1.57$ (mean vs median)
+\textbf{Common Estimator Biases}
+
+\begin{itemize}
+\item Sample variance (MLE): $\hat{\sigma}^2_{\text{MLE}} = \frac{1}{n}\sum(X_i-\bar{X})^2$ is \textbf{biased}
+  \begin{itemize}
+  \item $\E[\hat{\sigma}^2_{\text{MLE}}] = \frac{n-1}{n}\sigma^2$ (underestimates)
+  \item Unbiased version: $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$
+  \end{itemize}
+\item Uniform$(0, \theta)$: $\hat{\theta} = X_{(n)}$ is biased
+  \begin{itemize}
+  \item $\E[X_{(n)}] = \frac{n}{n+1}\theta$ (underestimates)
+  \item $\E[X_{(1)}] = \frac{\theta}{n+1}$ (min)
+  \item Unbiased: $\frac{n+1}{n}X_{(n)}$
+  \end{itemize}
+\end{itemize}
+
+\textbf{Variance Formulas:}
+\begin{itemize}
+\item Linear combo: $\Var(aX + bY) = a^2\Var(X) + b^2\Var(Y) + 2ab\Cov(X,Y)$
+\item Independent: $\Var(X + Y) = \Var(X) + \Var(Y)$
+\item General: $\Var(X) = \E[X^2] - (\E[X])^2$
+\end{itemize}
 
 \textbf{Method of Moments (MoM)}
 
-Equate sample moments to population moments:
+Match sample moments to population moments:
 \begin{enumerate}
-\item $\mu_j' = \E[X^j]$ (population moments)
-\item $m_j = \frac{1}{n}\sum X_i^j$ (sample moments)
-\item Solve: $m_j = \mu_j'(\theta)$ for $\theta$
+\item Set $\bar{X} = \E[X]$ (first moment)
+\item Set $\frac{1}{n}\sum X_i^2 = \E[X^2]$ (second moment)
+\item Solve for $\theta$
 \end{enumerate}
 
-Properties: Simple, consistent, but may not be efficient
+\textit{Example:} Gamma$(\alpha, \beta)$:
+\begin{itemize}
+\item $\E[X] = \alpha\beta = \bar{X}$
+\item $\Var(X) = \alpha\beta^2 = S^2$
+\item Solve: $\hat{\beta} = S^2/\bar{X}$, $\hat{\alpha} = \bar{X}^2/S^2$
+\end{itemize}
+
+\textbf{Common Pitfalls:}
+\begin{itemize}
+\item $S^2$ (unbiased) has $n-1$; MLE $\hat{\sigma}^2$ has $n$
+\item t-distribution df is $n-1$ (not $n$!)
+\item For $\chi^2$ variance test: $(n-1)S^2/\sigma^2$
+\item Type I error $= \alpha$, Type II error $= \beta$
+\end{itemize}
 
 \textbf{Maximum Likelihood (MLE)}
 
@@ -257,63 +287,92 @@ Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
 \item Uniform$(0, \theta)$: $\hat{\theta} = X_{(n)} = \max\{X_1, \ldots, X_n\}$
 \end{itemize}
 
+\textbf{MLE Finding Tips:}
+\begin{itemize}
+\item \textit{Support depends on $\theta$:} Uniform$(0,\theta)$ or $(a,b)$
+  \begin{itemize}
+  \item MLE is at boundary: $\max\{X_i\}$ or $\{\min\{X_i\}, \max\{X_i\}\}$
+  \item \textbf{Don't differentiate!}
+  \end{itemize}
+\item \textit{Log tricks:} $\frac{d}{d\theta}\log f = \frac{f'}{f}$, $\log(a^b) = b\log a$
+\item Check second derivative to verify maximum
+\end{itemize}
+
 \textbf{MLE Properties:}
 \begin{itemize}
 \item Invariance: If $\hat{\theta}$ is MLE of $\theta$, then $g(\hat{\theta})$ is MLE of $g(\theta)$
 \item Consistent under regularity conditions
 \item Asymptotically efficient
-\item Asymptotic normality: $\hat{\theta}_n \approx N(\theta, \frac{1}{nI(\theta)})$
+\item Asymptotic normality: $\hat{\theta}_n \xrightarrow{d} N(\theta, \frac{1}{nI(\theta)})$
 \end{itemize}
 
-\textbf{Fisher Information}
+\textbf{Fisher Information $I(\theta)$}
 
-Single observation:
-$$I(\theta) = \E\left[\left(\frac{\partial \log f(X;\theta)}{\partial \theta}\right)^2\right] = -\E\left[\frac{\partial^2 \log f(X;\theta)}{\partial \theta^2}\right]$$
+\textbf{Definition:} Measures information about $\theta$ from one observation.
 
-For i.i.d. sample: $I_n(\theta) = n \cdot I(\theta)$
+Two equivalent forms:
+\begin{enumerate}
+\item Expected curvature: $I(\theta) = -\E\left[\frac{d^2\log f(X;\theta)}{d\theta^2}\right]$
+\item Variance of score: $I(\theta) = \E\left[\left(\frac{d\log f(X;\theta)}{d\theta}\right)^2\right]$
+\end{enumerate}
 
-\textbf{Cramér-Rao Lower Bound (CRLB)}
+Relationship: Both equal under regularity conditions.
 
-For any unbiased estimator $\hat{\theta}$:
-$$\Var(\hat{\theta}) \ge \frac{1}{I_n(\theta)} = \frac{1}{nI(\theta)}$$
+\textbf{How to compute $I(\theta)$:}
+\begin{enumerate}
+\item Write $\log f(x; \theta)$
+\item Find score: $S(\theta) = \frac{d\log f}{d\theta}$
+\item Method 1: $I(\theta) = \E[S(\theta)^2]$
+\item Method 2: Find $\frac{d^2\log f}{d\theta^2}$, then $I(\theta) = -\E[\frac{d^2\log f}{d\theta^2}]$
+\end{enumerate}
 
-Efficiency: $\text{eff}(\hat{\theta}) = \frac{1/(nI(\theta))}{\Var(\hat{\theta})} \in [0,1]$
+\textbf{Sample Fisher Information:}
 
-Estimator achieving bound is called efficient.
+For $n$ i.i.d. observations: $nI(\theta)$
+
+Total log-likelihood: $\ell(\theta) = \sum_{i=1}^n \log f(X_i; \theta)$
+
+Sample info: $I_n(\theta) = -\E\left[\frac{d^2\ell(\theta)}{d\theta^2}\right] = nI(\theta)$
+
+\textbf{MLE Variance (Cramer-Rao):}
+
+$$\Var(\hat{\theta}_{\text{MLE}}) \approx \frac{1}{nI(\theta)}$$
+
+Estimated variance: $\widehat{\Var}(\hat{\theta}) = \frac{1}{nI(\hat{\theta})}$
 
 \textbf{Common Fisher Information:}
 \begin{itemize}
 \item Bernoulli$(p)$: $I(p) = \frac{1}{p(1-p)}$
 \item Poisson$(\lambda)$: $I(\lambda) = \frac{1}{\lambda}$
-\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $I(\mu) = \frac{1}{\sigma^2}$
+\item $N(\mu, \sigma^2)$ (known $\sigma^2$): $I(\mu) = \frac{1}{\sigma^2}$
+\item $N(\mu, \sigma^2)$ (known $\mu$): $I(\sigma^2) = \frac{1}{2\sigma^4}$
 \item Exponential$(\lambda)$: $I(\lambda) = \frac{1}{\lambda^2}$
 \end{itemize}
 
-\textbf{Sufficiency}
+\textbf{Example:} Bernoulli$(p)$ - Full derivation
 
-$T(X)$ is sufficient for $\theta$ if conditional distribution of $X$ given $T$ doesn't depend on $\theta$.
+\textit{Step 1: Single observation Fisher info}
+\begin{align*}
+f(x;p) &= p^x(1-p)^{1-x} \quad \text{(one obs)} \\
+\log f &= x\log p + (1-x)\log(1-p) \\
+\frac{d\log f}{dp} &= \frac{x}{p} - \frac{1-x}{1-p} \\
+\frac{d^2\log f}{dp^2} &= -\frac{x}{p^2} - \frac{1-x}{(1-p)^2} \\
+I(p) &= -\E\left[-\frac{X}{p^2} - \frac{1-X}{(1-p)^2}\right] \\
+&= \frac{p}{p^2} + \frac{1-p}{(1-p)^2} = \frac{1}{p(1-p)}
+\end{align*}
 
-\textbf{Factorization Theorem:}
+\textit{Step 2: Sample of size $n$}
 
-$T$ is sufficient iff likelihood factors as:
-$$L(\theta; x) = g(T(x), \theta) \cdot h(x)$$
+For $X_1, \ldots, X_n$ i.i.d.: $nI(p) = \frac{n}{p(1-p)}$
 
-where $g$ depends on data only through $T$, $h$ doesn't depend on $\theta$.
+\textit{Step 3: MLE variance}
+$$\Var(\hat{p}) = \frac{1}{nI(p)} = \frac{p(1-p)}{n}$$
 
-\textbf{Examples:}
-\begin{itemize}
-\item Normal$(\mu, \sigma^2)$ (known $\sigma$): $\bar{X}$ is sufficient for $\mu$
-\item Poisson$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
-\item Exponential$(\lambda)$: $\sum X_i$ is sufficient for $\lambda$
-\end{itemize}
+\textbf{Large Sample CI for MLE:}
 
-\textbf{Completeness \& UMVUE}
+Generic: $\hat{\theta} \pm z_{\alpha/2} \sqrt{\frac{1}{nI(\hat{\theta})}}$
 
-$T$ is complete if $\E[g(T)] = 0$ for all $\theta$ implies $P(g(T) = 0) = 1$.
-
-\textbf{Lehmann-Scheffé Theorem:}
-
-If $T$ is complete sufficient and $\phi(T)$ is unbiased for $\tau(\theta)$, then $\phi(T)$ is UMVUE (unique minimum variance unbiased estimator).
+For proportion: $\hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$
 
 \vspace{2mm}
 \fbox{\large\textbf{4. Confidence Intervals}}
@@ -421,6 +480,7 @@ $$\chi^2 = \frac{(n-1)s^2}{\sigma_0^2} \sim \chi^2_{n-1} \text{ under } H_0$$
 
 \textbf{Two-sample t-test (equal var):}
 $$t = \frac{\bar{X}_1 - \bar{X}_2}{s_p\sqrt{1/n_1 + 1/n_2}} \sim t_{n_1+n_2-2} \text{ under } H_0$$
+where $s_p^2 = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1+n_2-2}$
 
 \textbf{F-test (variance ratio):}
 $$F = \frac{s_1^2}{s_2^2} \sim F_{n_1-1, n_2-1} \text{ under } H_0: \sigma_1^2 = \sigma_2^2$$
@@ -443,18 +503,47 @@ $$F = \frac{s_1^2}{s_2^2} \sim F_{n_1-1, n_2-1} \text{ under } H_0: \sigma_1^2 =
 
 \textbf{Power \& Sample Size}
 
-Power: $\pi(\mu_1) = \Phi\left(\frac{\mu_1 - \mu_0}{\sigma/\sqrt{n}} - z_\alpha\right)$
+\textit{Power function:} $\pi(\theta) = P(\text{Reject } H_0 | \theta)$
 
-Sample size: $n = \left(\frac{(z_\alpha + z_\beta)\sigma}{\mu_1 - \mu_0}\right)^2$
+\textit{One-sided (upper):} $H_0: \mu \le \mu_0$ vs $H_1: \mu > \mu_0$
+$$\pi(\mu_1) = \Phi\left(\frac{\mu_1 - \mu_0}{\sigma/\sqrt{n}} - z_\alpha\right)$$
 
-Two-sided: Use $z_{\alpha/2}$ instead of $z_\alpha$
+\textit{Two-sided:} Replace $z_\alpha$ with $z_{\alpha/2}$
+
+\textit{Sample size:} For power $1-\beta$ at $\mu_1$:
+$$n = \left(\frac{(z_\alpha + z_\beta)\sigma}{\mu_1 - \mu_0}\right)^2$$
+
+Two-sided: $n = \left(\frac{(z_{\alpha/2} + z_\beta)\sigma}{\mu_1 - \mu_0}\right)^2$
+
+\textbf{Test Decision Rules}
+
+\textit{p-value approach:}
+\begin{itemize}
+\item Calculate test statistic
+\item Find p-value $= P(\text{as extreme or more} | H_0)$
+\item Reject if $p \le \alpha$
+\end{itemize}
+
+\textit{Critical value approach:}
+\begin{itemize}
+\item Find critical value(s) from distribution
+\item Reject if test statistic in rejection region
+\end{itemize}
+
+\textbf{p-Value Calculation}
+
+\textit{Upper-tail:} $p = P(T \ge t_{\text{obs}} | H_0)$
+
+\textit{Lower-tail:} $p = P(T \le t_{\text{obs}} | H_0)$
+
+\textit{Two-tailed:} $p = 2P(|T| \ge |t_{\text{obs}}| | H_0)$
 
 \textbf{CI-Testing Duality}
 
-If $(1-\alpha)$ CI for $\theta$ is $[L, U]$:
+$(1-\alpha)$ CI $[L, U]$ corresponds to level-$\alpha$ test:
 \begin{itemize}
-\item $\theta_0 \notin [L, U]$: Reject $H_0: \theta = \theta_0$ at level $\alpha$
-\item $\theta_0 \in [L, U]$: Fail to reject $H_0$
+\item Reject $H_0: \theta = \theta_0$ iff $\theta_0 \notin [L, U]$
+\item Fail to reject iff $\theta_0 \in [L, U]$
 \end{itemize}
 
 \vspace{2mm}
@@ -496,49 +585,383 @@ where $\nu = \dim(\Theta) - \dim(\Theta_0)$ (df = difference in parameters)
 
 Rejection: $-2\log\lambda(x) > \chi^2_{\alpha, \nu}$
 
-\vspace{2mm}
-\fbox{\large\textbf{7. Key Distributions Summary}}
-\vspace{0.5mm}
+\textbf{LRT Calculation Steps}
 
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Dist} & \textbf{Mean} & \textbf{Var} & \textbf{Support} \\
-\hline
-$\chi^2(k)$ & $k$ & $2k$ & $(0, \infty)$ \\
-$t(n)$ & 0 & $\frac{n}{n-2}$ & $(-\infty, \infty)$ \\
-$F(n_1,n_2)$ & $\frac{n_2}{n_2-2}$ & - & $(0, \infty)$ \\
-\hline
-\end{tabular}
+\begin{enumerate}
+\item Find unrestricted MLE: $\hat{\theta} = \arg\max_{\theta \in \Omega} L(\theta)$
+\item Find restricted MLE: $\hat{\theta}_0 = \arg\max_{\theta \in \Omega_0} L(\theta)$
+\item Compute: $\lambda = \frac{L(\hat{\theta}_0)}{L(\hat{\theta})}$
+\item Test statistic: $-2\log\lambda$
+\item Compare to $\chi^2_\nu$ critical value
+\end{enumerate}
 
-\textbf{Relationships:}
+\textbf{Common LRT Scenarios}
+
+\textit{Normal mean ($\sigma^2$ known):} $H_0: \mu = \mu_0$
 \begin{itemize}
-\item $\sum_{i=1}^k Z_i^2 \sim \chi^2(k)$, $Z_i \sim N(0,1)$ iid
-\item $\frac{Z}{\sqrt{V/n}} \sim t(n)$, $Z \sim N(0,1)$, $V \sim \chi^2(n)$
-\item $\frac{V_1/n_1}{V_2/n_2} \sim F(n_1,n_2)$, $V_i \sim \chi^2(n_i)$
-\item $T^2 \sim F(1,n)$ if $T \sim t(n)$
-\item $\chi^2(k_1) + \chi^2(k_2) = \chi^2(k_1+k_2)$ (independent)
+\item $\lambda = \exp\left\{-\frac{n(\bar{x}-\mu_0)^2}{2\sigma^2}\right\}$
+\item $-2\log\lambda = \frac{n(\bar{x}-\mu_0)^2}{\sigma^2} \sim \chi^2_1$
+\item Equivalent to Z-test
 \end{itemize}
 
-\vspace{2mm}
-\fbox{\large\textbf{8. Important Formulas}}
-\vspace{0.5mm}
+\textit{Normal variance ($\mu$ known):} $H_0: \sigma^2 = \sigma_0^2$
+\begin{itemize}
+\item $\lambda = \left(\frac{\hat{\sigma}^2}{\sigma_0^2}\right)^{n/2} e^{-\frac{n}{2}(\frac{\hat{\sigma}^2}{\sigma_0^2}-1)}$
+\item $-2\log\lambda \sim \chi^2_1$
+\end{itemize}
 
-\textbf{Sample Statistics (Normal):}
-$$\bar{X} \sim N(\mu, \sigma^2/n)$$
-$$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$$
-$$\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t(n-1)$$
+\textit{Two Normal means (equal var):} $H_0: \mu_1 = \mu_2$
+\begin{itemize}
+\item Simplifies to t-test
+\item $\nu = 1$ (one constraint)
+\end{itemize}
 
-\textbf{Two Samples (Normal, equal var):}
-$$\frac{s_1^2/\sigma_1^2}{s_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$$
+\textbf{LRT vs Other Tests}
 
-\textbf{MLE Asymptotic Normality:}
-$$\hat{\theta}_{\text{MLE}} \approx N\left(\theta, \sigma^2_{\text{MLE}}\right) \text{ for large } n$$
+\begin{itemize}
+\item LRT is asymptotically optimal
+\item For Normal, LRT = t-test or F-test
+\item Use $\nu =$ \# free params (unrestricted) $-$ \# free params (restricted)
+\end{itemize}
 
-\textbf{Delta Method:}
-$$g(\hat{\theta}_n) \approx N\left(g(\theta), [g'(\theta)]^2 \Var(\hat{\theta}_n)\right)$$
-
-\textbf{LRT Asymptotic:}
-$$-2\log\lambda \xrightarrow{d} \chi^2_\nu$$
 
 \end{multicols}
+
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+\Large{\textbf{Key Exam Problems}}
+\end{center}
+
+\begin{multicols}{2}
+
+\begin{center}
+\textbf{--- Fall 2022 Final Exam ---}
+\end{center}
+
+\textbf{P1 (2022):} $Y_1, \ldots, Y_n$ iid from $f(y) = \frac{1}{\theta}y^{\frac{1}{\theta}-1}$, $0 < y < 1$, $\theta > 0$. Find MLE of $\theta$.
+
+Likelihood: $L(\theta) = \prod_{i=1}^n \frac{1}{\theta}y_i^{\frac{1}{\theta}-1} = \theta^{-n} \prod y_i^{\frac{1}{\theta}-1}$
+
+Log-likelihood: $\ell(\theta) = -n\log\theta + (\frac{1}{\theta} - 1)\sum_{i=1}^n \log y_i$
+
+Derivative: $\frac{d\ell}{d\theta} = -\frac{n}{\theta} - \frac{1}{\theta^2}\sum \log y_i = 0$
+
+Solve: $n\theta = -\sum \log y_i$
+
+$\boxed{\hat{\theta}_{\text{MLE}} = -\frac{1}{n}\sum_{i=1}^n \log Y_i = -\overline{\log Y}}$
+
+\textbf{P2 (2022):} $Y_1, \ldots, Y_{25}$ iid $N(\mu, 9)$. Test $H_0: \mu = 18$ vs $H_1: \mu > 18$. Rejection region: $\bar{Y} > 19$. Find power when $\mu=20$.
+
+Power $= P(\text{Reject } H_0 | \mu = 20)$
+
+Under $\mu=20$: $\bar{Y} \sim N(20, 9/25)$, $\text{SE} = \sqrt{9/25} = 0.6$
+
+Standardize: $P(\bar{Y} > 19) = P\left(\frac{\bar{Y}-20}{0.6} > \frac{19-20}{0.6}\right)$
+
+$= P(Z > -1.667) = 1 - \Phi(-1.667) = \Phi(1.667)$
+
+Using Z-table: $\boxed{\text{Power} = 0.9525}$
+
+\textit{Note:} Find Type I error by evaluating at $\mu=18$
+
+\textbf{P3 (2022):} $X_1, \ldots, X_m$ iid $N(\mu_X, 1)$, $Y_1, \ldots, Y_n$ iid $N(\mu_Y, 1)$ independent. Test $H_0: \mu_X - \mu_Y = 2$ vs $H_1: \mu_X - \mu_Y \neq 2$. Find rejection region $\bar{X} - \bar{Y} \notin [K_1, K_2]$ with Type I error $\alpha$.
+
+Construct test statistic under $H_0$:
+
+$\bar{X} - \bar{Y} \sim N(\mu_X - \mu_Y, \frac{1}{m} + \frac{1}{n})$
+
+Under $H_0$: $\mu_X - \mu_Y = 2$
+
+Standardize: $Z = \frac{(\bar{X}-\bar{Y}) - 2}{\sqrt{1/m + 1/n}} \sim N(0,1)$
+
+Two-sided test: Reject if $|Z| \ge z_{\alpha/2}$, i.e., $\bar{X}-\bar{Y} \notin [K_1, K_2]$
+
+$\boxed{K_1 = 2 - z_{\alpha/2}\sqrt{\frac{1}{m}+\frac{1}{n}}}$
+
+$\boxed{K_2 = 2 + z_{\alpha/2}\sqrt{\frac{1}{m}+\frac{1}{n}}}$
+
+
+
+\textbf{P4 (2022):} $Y_1, \ldots, Y_n$ iid $N(\mu, \sigma^2)$. Compare two estimators of $\mu$: $\bar{Y}$ and $\hat{\mu}^* = \frac{1}{n+1}[\sum Y_i + 10]$.
+
+\textit{(a) Find $\Var(\bar{Y})$}
+
+$\Var(\bar{Y}) = \Var\left(\frac{1}{n}\sum Y_i\right) = \frac{1}{n^2}\sum \Var(Y_i) = \frac{n\sigma^2}{n^2} = \boxed{\frac{\sigma^2}{n}}$
+
+\textit{(b) Find $\Var(\hat{\mu}^*)$}
+
+Rewrite: $\hat{\mu}^* = \frac{\sum Y_i + 10}{n+1} = \frac{n\bar{Y} + 10}{n+1}$
+
+$\Var(\hat{\mu}^*) = \Var\left(\frac{n\bar{Y}}{n+1}\right) = \left(\frac{n}{n+1}\right)^2 \Var(\bar{Y})$
+
+$= \frac{n^2}{(n+1)^2} \cdot \frac{\sigma^2}{n} = \boxed{\frac{n\sigma^2}{(n+1)^2}}$
+
+Note: $\frac{n\sigma^2}{(n+1)^2} < \frac{\sigma^2}{n}$ since $\frac{n}{(n+1)^2} < \frac{1}{n}$
+
+\textit{(c) Find MSE for both estimators}
+
+For $\bar{Y}$: Unbiased, so MSE$(\bar{Y}) = \Var(\bar{Y}) = \frac{\sigma^2}{n}$
+
+For $\hat{\mu}^*$: $\E[\hat{\mu}^*] = \frac{n\mu + 10}{n+1}$
+
+Bias $= \frac{n\mu + 10}{n+1} - \mu = \frac{n\mu + 10 - (n+1)\mu}{n+1} = \frac{10-\mu}{n+1}$
+
+MSE$(\hat{\mu}^*) = \Var(\hat{\mu}^*) + [\text{Bias}]^2 = \frac{n\sigma^2}{(n+1)^2} + \frac{(10-\mu)^2}{(n+1)^2}$
+
+$= \boxed{\frac{n\sigma^2 + (10-\mu)^2}{(n+1)^2}}$
+
+\textit{(d) Which is better if $\mu=10$?}
+
+If $\mu=10$: Bias $= 0$, so MSE$(\hat{\mu}^*) = \frac{n\sigma^2}{(n+1)^2}$
+
+Compare: $\frac{n\sigma^2}{(n+1)^2}$ vs $\frac{\sigma^2}{n}$
+
+$\frac{n\sigma^2}{(n+1)^2} < \frac{\sigma^2}{n} \iff \frac{n^2}{(n+1)^2} < 1$ (always true)
+
+$\implies \boxed{\hat{\mu}^* \text{ is better when } \mu=10}$
+
+\textbf{P5 (2022):} $Y_1, \ldots, Y_n$ iid $N(\mu, \sigma^2)$. Consider MLE $\hat{\sigma}^2 = \frac{1}{n}\sum(Y_i-\bar{Y})^2$.
+
+\textit{(a) Find $\E[\hat{\sigma}^2]$ and $\Var(\hat{\sigma}^2)$}
+
+Expectation: Recall $(n-1)S^2 = \sum(Y_i-\bar{Y})^2$ where $S^2 = \frac{1}{n-1}\sum(Y_i-\bar{Y})^2$
+
+Since $\E[S^2] = \sigma^2$:
+
+$\E[\hat{\sigma}^2] = \E\left[\frac{1}{n}\sum(Y_i-\bar{Y})^2\right] = \frac{1}{n}\E[(n-1)S^2]$
+
+$= \frac{n-1}{n}\E[S^2] = \boxed{\frac{n-1}{n}\sigma^2}$ (Biased! Underestimates by factor $\frac{n-1}{n}$)
+
+Variance: Use fact that $\frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$
+
+$\Var\left(\frac{(n-1)S^2}{\sigma^2}\right) = 2(n-1) \implies \Var(S^2) = \frac{2(n-1)\sigma^4}{(n-1)^2} = \frac{2\sigma^4}{n-1}$
+
+$\Var(\hat{\sigma}^2) = \Var\left(\frac{n-1}{n}S^2\right) = \left(\frac{n-1}{n}\right)^2 \Var(S^2) = \boxed{\frac{2(n-1)\sigma^4}{n^2}}$
+
+\textit{(b) Is $\hat{\sigma}^2$ consistent?}
+
+Check: Bias $= \frac{n-1}{n}\sigma^2 - \sigma^2 = -\frac{\sigma^2}{n} \to 0$ as $n \to \infty$ ✓
+
+$\Var(\hat{\sigma}^2) = \frac{2(n-1)\sigma^4}{n^2} \sim \frac{2\sigma^4}{n} \to 0$ as $n \to \infty$ ✓
+
+Both bias and variance $\to 0$, so $\boxed{\text{YES, } \hat{\sigma}^2 \text{ is consistent}}$
+
+\textbf{P6 (2022):} $Y \sim \text{Binomial}(n, p)$. MLE is $\hat{p} = Y/n$. Derive 95\% CI for $p$ using Fisher Information.
+
+\textit{Step 1: Find Fisher Information}
+
+For Bernoulli$(p)$: $I(p) = \frac{1}{p(1-p)}$ (single observation)
+
+For $n$ observations: $nI(p) = \frac{n}{p(1-p)}$
+
+\textit{Step 2: MLE variance (Cramér-Rao)}
+
+$\Var(\hat{p}) \approx \frac{1}{nI(p)} = \frac{p(1-p)}{n}$
+
+Standard error: $\text{SE}(\hat{p}) = \sqrt{\frac{p(1-p)}{n}}$
+
+\textit{Step 3: Large sample CI}
+
+Asymptotic normality: $\hat{p} \xrightarrow{d} N\left(p, \frac{p(1-p)}{n}\right)$
+
+Standardize: $\frac{\hat{p} - p}{\sqrt{p(1-p)/n}} \xrightarrow{d} N(0,1)$
+
+Plug-in estimate: Replace $p$ with $\hat{p}$ in SE
+
+95\% CI: $\boxed{\hat{p} \pm z_{.025}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} = \hat{p} \pm 1.96\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}}$
+
+\vspace{2mm}
+
+
+\begin{center}
+\textbf{--- Fall 2023 Final Exam ---}
+\end{center}
+
+\vspace{1mm}
+
+\textbf{P1 (2023):} Given $\E[X]=3$, $\Var(X)=4$, $\E[Y]=1$, $\Var(Y)=2$, $\Cov(X,Y)=-1$. Let $W = 2Y - 4X + 1$. Find $\E[W]$ and $\Var(W)$.
+
+$\E[W] = 2\E[Y] - 4\E[X] + 1 = 2(1) - 4(3) + 1 = \boxed{-9}$
+
+$\Var(W) = (-4)^2\Var(X) + (2)^2\Var(Y) + 2(-4)(2)\Cov(X,Y)$
+$= 16(4) + 4(2) - 16(-1) = 64 + 8 + 16 = \boxed{88}$
+
+\textbf{P2 (2023):} $Y$ has PDF $f(y) = \frac{1}{y\sqrt{2\pi}}e^{-(\log y-2)^2/2}$, $y > 0$. Find distribution of $U = \log Y$.
+
+Transformation: $U = \log Y \implies Y = e^U$, Jacobian: $\frac{dy}{du} = e^u$
+
+$f_U(u) = f_Y(e^u) \cdot e^u = \frac{1}{e^u\sqrt{2\pi}}e^{-(u-2)^2/2} \cdot e^u = \frac{1}{\sqrt{2\pi}}e^{-(u-2)^2/2}$
+
+$\boxed{U \sim N(2, 1)}$
+
+\textbf{P3 (2023):} Population: $\mu=3.4$, $\sigma=0.5$ (known). Find minimum $n$ for 95\% CI width $\le 0.2$.
+
+Width $= 2z_{.025}\frac{\sigma}{\sqrt{n}} = \frac{1.96}{\sqrt{n}} \le 0.2$
+$\implies \sqrt{n} \ge 9.8 \implies n \ge 96.04$, so $\boxed{n = 97}$
+
+\textbf{P4 (2023):} $Y_1, \ldots, Y_n$ iid $U(\theta, \theta+1)$. Evaluate estimators.
+
+(a) $\hat{\theta}_1 = \bar{Y}$: $\E[\bar{Y}] = \theta + 0.5$, Bias $= 0.5$ (NOT consistent)
+
+(b) $\hat{\theta}_2 = Y_{(1)}$: $\E[Y_{(1)}] = \theta + \frac{1}{n+1}$, Bias $\to 0$ (consistent)
+
+\textbf{P5 (2023):} $Y_1, \ldots, Y_n$ iid $N(0, \sigma^2)$ ($\mu=0$ known). Construct 95\% CI for $\sigma^2$.
+
+Pivotal: $Q = \frac{\sum Y_i^2}{\sigma^2} \sim \chi^2_n$
+
+$P\!\left(\chi^2_{.025,n} \le \frac{\sum Y_i^2}{\sigma^2} \le \chi^2_{.975,n}\right) = 0.95$
+
+95\% CI: $\boxed{\left[\frac{\sum Y_i^2}{\chi^2_{.975,n}}, \frac{\sum Y_i^2}{\chi^2_{.025,n}}\right]}$
+
+\textbf{P6 (2023):} $Y_1, \ldots, Y_n$ iid from $f(y) = (2\beta+2)y^{2\beta+1}$, $0 < y < 1$. Find MLE of $\beta$.
+
+$\ell(\beta) = n\log(2\beta+2) + (2\beta+1)\sum \log y_i$
+
+$\frac{d\ell}{d\beta} = \frac{2n}{2\beta+2} + 2\sum \log y_i = 0$
+
+$\boxed{\hat{\beta}_{\text{MLE}} = \frac{-n}{2\sum \log y_i} - 1}$
+
+\vspace{2mm}
+
+
+\begin{center}
+\textbf{--- Fall 2024 Final Exam ---}
+\end{center}
+
+\vspace{1mm}
+
+\textbf{P1 (2024):} $X_i \sim N(\mu, \sigma^2)$, $Y_i \sim N(\mu, 2\sigma^2)$ indep. Given $\hat{\sigma}^2 = \frac{1}{2n}\sum(X_i-\mu)^2 + \frac{1}{4n}\sum(Y_i-\mu)^2$.
+
+$\E[\hat{\sigma}^2] = \frac{1}{2n} \cdot n\sigma^2 + \frac{1}{4n} \cdot n(2\sigma^2) = \sigma^2$ (Unbiased)
+
+$\Var(\hat{\sigma}^2) = \frac{\sigma^4}{2n} + \frac{\sigma^4}{2n} = \frac{\sigma^4}{n} \to 0$ (Consistent)
+
+\textbf{P2 (2024):} $Y_1, \ldots, Y_n$ iid from $f(y) = \frac{1}{\theta}y^{1/\theta}$, $0 < y < 1$, $\theta > 0$. Find MLE of $\theta$.
+
+$\ell(\theta) = -n\log\theta + \frac{1}{\theta}\sum \log y_i$
+
+$\frac{d\ell}{d\theta} = -\frac{n}{\theta} - \frac{1}{\theta^2}\sum \log y_i = 0$
+
+$\boxed{\hat{\theta}_{\text{MLE}} = -\frac{1}{n}\sum \log Y_i}$
+
+\textbf{P3 (2024):} $X_1, \ldots, X_m$ iid $N(\theta, 1)$, $Y_1, \ldots, Y_n$ iid $N(\theta+1, 1)$ indep. Construct 95\% CI for $\theta$ using $\bar{X} + \bar{Y}$.
+
+$\bar{X} + \bar{Y} \sim N\left(2\theta+1, \frac{1}{m}+\frac{1}{n}\right)$, so $\theta = \frac{\bar{X}+\bar{Y}-1}{2}$
+
+95\% CI: $\boxed{\frac{\bar{X}+\bar{Y}-1}{2} \pm \frac{0.98}{\sqrt{1/m+1/n}}}$
+
+\textbf{P4 (2024):} $Y$ has single observation from $U(3, 3\theta)$. Test $H_0: \theta=4$ vs $H_1: \theta<4$. Rejection region: $Y < c$ with $\alpha=0.05$. Find $c$ and power at $\theta=3$.
+
+\textit{Part (a): Find critical value $c$}
+
+Under $H_0: \theta=4$: $Y \sim U(3, 12)$
+
+CDF under $H_0$: $F(y) = \frac{y-3}{12-3} = \frac{y-3}{9}$ for $3 \le y \le 12$
+
+Type I error: $\alpha = P(Y < c | H_0) = \frac{c-3}{9} = 0.05$
+
+Solve: $c - 3 = 0.45 \implies \boxed{c = 3.45}$
+
+\textit{Part (b): Calculate power at $\theta=3$}
+
+Under $H_1: \theta=3$: $Y \sim U(3, 9)$
+
+CDF under $H_1$: $F(y) = \frac{y-3}{9-3} = \frac{y-3}{6}$ for $3 \le y \le 9$
+
+Power $= P(Y < 3.45|\theta=3) = \frac{3.45-3}{6} = \frac{0.45}{6} = \boxed{0.075}$
+
+\textbf{P5 (2024):} Two independent populations: $X \sim N(\mu_1, 9)$ and $Y \sim N(\mu_2, 9)$. Samples: $n$ from pop 1, $2n$ from pop 2. Find minimum $n$ for 90\% CI of $\mu_1-\mu_2$ to have width $\le 3$.
+
+\textit{Step 1: Find variance of estimator}
+
+$\bar{X} - \bar{Y}$ is the estimator for $\mu_1 - \mu_2$
+
+$\Var(\bar{X}-\bar{Y}) = \Var(\bar{X}) + \Var(\bar{Y}) = \frac{\sigma_1^2}{n} + \frac{\sigma_2^2}{2n}$
+
+$= \frac{9}{n} + \frac{9}{2n} = \frac{18}{2n} + \frac{9}{2n} = \frac{27}{2n}$
+
+\textit{Step 2: CI width formula}
+
+90\% CI: $(\bar{X}-\bar{Y}) \pm z_{.05}\sqrt{\frac{27}{2n}}$ where $z_{.05} = 1.645$
+
+Width $= 2z_{.05}\sqrt{\frac{27}{2n}} = 2(1.645)\sqrt{\frac{27}{2n}} = 3.29\sqrt{\frac{27}{2n}}$
+
+\textit{Step 3: Solve inequality}
+
+Require: $3.29\sqrt{\frac{27}{2n}} \le 3$
+
+$\sqrt{\frac{27}{2n}} \le \frac{3}{3.29} = 0.912$
+
+$\frac{27}{2n} \le (0.912)^2 = 0.8317$
+
+$2n \ge \frac{27}{0.8317} = 32.46$
+
+$n \ge 16.23$
+
+Therefore: $\boxed{n = 17}$ (round up to nearest integer)
+
+\end{multicols}
+
+\vspace{3mm}
+
+
+\begin{center}
+    
+% \hrule
+% \vspace{2mm}
+
+% \begin{center}
+% \Large{\textbf{Common Distributions Reference}}
+% \end{center}
+
+% \vspace{1mm}
+
+\small
+\setlength{\tabcolsep}{16pt}
+
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Distribution} & \textbf{PMF/Range} & \textbf{Mean \& Variance} & \textbf{Notes} \\
+\hline
+Bernoulli($p$) & $P(X=1)=p$, $X \in \{0,1\}$ & $\E[X]=p$, $\Var(X)=p(1-p)$ & MGF: $(1-p)+pe^t$ \\
+\hline
+Binomial($n,p$) & $P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}$ & $\E[X]=np$, $\Var(X)=np(1-p)$ & $X \in \{0,\ldots,n\}$ \\
+\hline
+Geometric($p$) & $P(X=k)=(1-p)^{k-1}p$ & $\E[X]=\frac{1}{p}$, $\Var(X)=\frac{1-p}{p^2}$ & Memoryless \\
+\hline
+Poisson($\lambda$) & $P(X=k)=\frac{\lambda^k e^{-\lambda}}{k!}$ & $\E[X]=\lambda$, $\Var(X)=\lambda$ & $X \in \{0,1,2,\ldots\}$ \\
+\hline
+% Neg-Binom($r,p$) & $P(X=k)=\binom{k-1}{r-1}p^r(1-p)^{k-r}$ & $\E[X]=\frac{r}{p}$, $\Var(X)=\frac{r(1-p)}{p^2}$ & Trials to $r$ successes \\
+% \hline
+\hline
+\textbf{Distribution} & \textbf{PDF/Support} & \textbf{Mean \& Variance} & \textbf{Notes} \\
+\hline
+Uniform($a,b$) & $f(x)=\frac{1}{b-a}$, $x \in [a,b]$ & $\E[X]=\frac{a+b}{2}$, $\Var(X)=\frac{(b-a)^2}{12}$ & CDF: $\frac{x-a}{b-a}$ \\
+\hline
+Normal($\mu,\sigma^2$) & $f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-(x-\mu)^2/(2\sigma^2)}$ & $\E[X]=\mu$, $\Var(X)=\sigma^2$ & $Z=\frac{X-\mu}{\sigma} \sim N(0,1)$ \\
+\hline
+Exponential($\lambda$) & $f(x)=\lambda e^{-\lambda x}$, $x \ge 0$ & $\E[X]=\frac{1}{\lambda}$, $\Var(X)=\frac{1}{\lambda^2}$ & Memoryless \\
+\hline
+Gamma($\alpha,\beta$) & $f(x)=\frac{\beta^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}$ & $\E[X]=\frac{\alpha}{\beta}$, $\Var(X)=\frac{\alpha}{\beta^2}$ & $\chi^2_n = \Gamma(n/2,1/2)$ \\
+\hline
+Beta($\alpha,\beta$) & $f(x)=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}(1-x)^{\beta-1}$ & $\E[X]=\frac{\alpha}{\alpha+\beta}$ & $x \in [0,1]$ \\
+ & $x \in [0,1]$ & $\Var(X)=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}$ & Beta$(1,1)=U(0,1)$ \\
+\hline
+Chi-squared($\nu$) & $f(x)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}x^{\nu/2-1}e^{-x/2}$ & $\E[X]=\nu$, $\Var(X)=2\nu$ & $\sum Z_i^2 \sim \chi^2_\nu$ \\
+\hline
+t-distribution($\nu$) & $f(x)=\frac{\Gamma((\nu+1)/2)}{\sqrt{\nu\pi}\Gamma(\nu/2)}\left(1+\frac{x^2}{\nu}\right)^{-(\nu+1)/2}$ & $\E[X]=0$, $\Var(X)=\frac{\nu}{\nu-2}$ & $\frac{Z}{\sqrt{V/\nu}} \sim t_\nu$ \\
+\hline
+F($\nu_1,\nu_2$) & Complex PDF & $\E[X]=\frac{\nu_2}{\nu_2-2}$ ($\nu_2>2$) & $\frac{U/\nu_1}{V/\nu_2} \sim F_{\nu_1,\nu_2}$ \\
+\hline
+% Cauchy & $f(x)=\frac{1}{\pi(1+x^2)}$ & Mean/Var DNE & $t_1 \sim$ Cauchy \\
+% \hline
+% Weibull($\alpha,\beta$) & $f(x)=\frac{\beta}{\alpha}\left(\frac{x}{\alpha}\right)^{\beta-1}e^{-(x/\alpha)^\beta}$ & Complex & CDF: $1-e^{-(x/\alpha)^\beta}$ \\
+% \hline
+% Lognormal($\mu,\sigma^2$) & $f(x)=\frac{1}{x\sigma\sqrt{2\pi}}e^{-(\log x-\mu)^2/(2\sigma^2)}$ & $\E[X]=e^{\mu+\sigma^2/2}$ & $\log X \sim N(\mu,\sigma^2)$ \\
+% \hline
+\end{tabular}
+\end{center}
+
 \end{document}
