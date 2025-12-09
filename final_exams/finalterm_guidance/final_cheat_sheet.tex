@@ -287,6 +287,30 @@ Finding MLE: Solve $\frac{d\ell}{d\theta} = 0$ (score equation)
 \item Uniform$(0, \theta)$: $\hat{\theta} = X_{(n)} = \max\{X_1, \ldots, X_n\}$
 \end{itemize}
 
+\textbf{Support Depends on Parameter:}
+
+\textit{Warning:} When support depends on $\theta$ (e.g., Uniform), \textbf{DON'T differentiate!}
+
+\textit{Examples:}
+\begin{itemize}
+\item Uniform$(0,\theta)$: $L(\theta) = \theta^{-n}$ for $\theta \ge \max\{X_i\}$
+  \begin{itemize}
+  \item Monotone decreasing in $\theta$
+  \item MLE at boundary: $\hat{\theta} = \max\{X_i\}$
+  \end{itemize}
+\item Uniform$(a,b)$: MLE at boundaries:
+  \begin{itemize}
+  \item $\hat{a} = \min\{X_i\}$, $\hat{b} = \max\{X_i\}$
+  \end{itemize}
+\end{itemize}
+
+\textit{Method:}
+\begin{enumerate}
+\item Find feasible region: $\{theta: L(\theta) > 0\}$
+\item Check if $L(\theta)$ monotone in feasible region
+\item MLE at boundary of feasible region
+\end{enumerate}
+
 \textbf{MLE Finding Tips:}
 \begin{itemize}
 \item \textit{Support depends on $\theta$:} Uniform$(0,\theta)$ or $(a,b)$
@@ -325,6 +349,17 @@ Relationship: Both equal under regularity conditions.
 \item Method 1: $I(\theta) = \E[S(\theta)^2]$
 \item Method 2: Find $\frac{d^2\log f}{d\theta^2}$, then $I(\theta) = -\E[\frac{d^2\log f}{d\theta^2}]$
 \end{enumerate}
+
+\textit{When 2nd derivative contains data:}
+\begin{itemize}
+\item Compute expectation: $\E[\frac{d^2\ell_1}{d\theta^2}]$
+\item Use moments: $\E[Y]$, $\E[Y^2]$, etc.
+\item Often simplifies to constant
+\item Example: Poisson$(\lambda)$: $\frac{d^2\ell_1}{d\lambda^2} = -\frac{Y}{\lambda^2}$
+  \begin{itemize}
+  \item $I(\lambda) = -\E[-\frac{Y}{\lambda^2}] = \frac{\E[Y]}{\lambda^2} = \frac{1}{\lambda}$
+  \end{itemize}
+\end{itemize}
 
 \textbf{Sample Fisher Information:}
 
@@ -424,6 +459,31 @@ For proportion:
 $$n = \hat{p}(1-\hat{p})\left(\frac{z_{\alpha/2}}{E}\right)^2$$
 
 Conservative (no prior $\hat{p}$): Use $\hat{p} = 0.5$ (gives largest $n$)
+
+\textbf{z vs t: Decision Guide}
+
+\textit{Use z-distribution (Normal):}
+\begin{itemize}
+\item $\sigma^2$ \textbf{known} (given in problem)
+\item OR large sample ($n > 30$) with CLT
+\item CI: $\bar{X} \pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}}$
+\end{itemize}
+
+\textit{Use t-distribution:}
+\begin{itemize}
+\item $\sigma^2$ \textbf{unknown} (must estimate with $s^2$)
+\item Use sample variance in formula
+\item CI: $\bar{X} \pm t_{\alpha/2,n-1}\frac{s}{\sqrt{n}}$
+\end{itemize}
+
+\textit{Key insight:} As $n \to \infty$, $t_{n-1} \to N(0,1)$, so both converge.
+
+\textit{Two-sample case:}
+\begin{itemize}
+\item Both $\sigma_X^2, \sigma_Y^2$ known $\Rightarrow$ use z
+\item Variances unknown $\Rightarrow$ use pooled t-test
+\item Known variance is \textbf{more precise} than pooled estimate
+\end{itemize}
 
 \vspace{2mm}
 \fbox{\large\textbf{5. Hypothesis Testing}}
